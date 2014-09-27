@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies{
+	compile 'ch.qos.logback:logback-classic:1.1.2'
+	compile 'ma.glasnost.orika:orika-core:1.4.5'
+	testCompile 'junit:junit:4.11+'
+	testCompile 'org.mockito:mockito-all:1.9.5'
+}
+
+sourceCompatibility = 1.7
+version = '1.0'
+
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'common.App'
+		def manifestCp  = configurations.runtime.files.collect {
+			File file = it
+			"lib/${file.name}"
+		}.join(' ')
+	}
+}
+
