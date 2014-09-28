@@ -17,13 +17,15 @@ public class App {
 		Drop drop = new DropImpl(10);
 		Mapper mapper = new MypperImpl();
 		AppService app = new AppService(drop, mapper);
+		processDirect(app);
 	}
 
 	public static void processDirect(AppService app) {
 		Scanner sc = new Scanner(System.in);
 		String current = "";
 		// TODO: tooooooooooooooo llooooooooooooooooooo IF statement
-		while ((current = sc.next()) != null && !current.equalsIgnoreCase("exit")) {
+		while ((current = sc.next()) != null
+				&& !current.equalsIgnoreCase("exit")) {
 			current = current.toLowerCase();
 			switch (current) {
 			case "start":

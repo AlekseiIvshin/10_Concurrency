@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="bankXmlImpl" type="bank"/>
+
+  <xs:element name="payments">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="payment" type="payment" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="payment">
+    <xs:sequence>
+      <xs:element name="executionDate" type="xs:dateTime"/>
+      <xs:element name="dateOfPayment" type="xs:dateTime"/>
+      <xs:element name="cash" type="xs:float"/>
+      <xs:element name="bank" type="bank"/>
+      <xs:element name="payee" type="payee"/>
+      <xs:element name="payer" type="payer"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="bank">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="BIC" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="payee">
+    <xs:sequence>
+      <xs:element name="address" type="xs:string"/>
+      <xs:element name="phone" type="xs:string"/>
+      <xs:element name="fullName" type="xs:string"/>
+      <xs:element name="document" type="document"/>
+      <xs:element name="account" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="document">
+    <xs:sequence>
+      <xs:element name="type" type="documentType"/>
+      <xs:element name="number" type="xs:string"/>
+      <xs:element name="series" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="payer">
+    <xs:sequence>
+      <xs:element name="address" type="xs:string"/>
+      <xs:element name="phone" type="xs:string"/>
+      <xs:element name="fullName" type="xs:string"/>
+      <xs:element name="document" type="document"/>
+      <xs:element name="account" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="documentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INN"/>
+      <xs:enumeration value="PASSPORT"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

@@ -1,6 +1,6 @@
 package concurrency;
 
-import xmlreader.XmlPayment;
+import xml.elements.PaymentXml;
 import dao.payment.PaymentDAO;
 import dao.payment.PaymentEntity;
 import domain.PaymentDomain;

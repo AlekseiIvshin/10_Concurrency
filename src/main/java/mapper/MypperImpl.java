@@ -1,10 +1,10 @@
 package mapper;
 
-import xmlreader.XmlBank;
-import xmlreader.XmlDocument;
-import xmlreader.XmlPayee;
-import xmlreader.XmlPayer;
-import xmlreader.XmlPayment;
+import xml.elements.BankXml;
+import xml.elements.DocumentXml;
+import xml.elements.PayeeXml;
+import xml.elements.PayerXml;
+import xml.elements.PaymentXml;
 import dao.payment.BankEnity;
 import dao.payment.Document;
 import dao.payment.ParticipantEntity;
@@ -24,17 +24,17 @@ public class MypperImpl implements Mapper {
 	private static MapperFactory initMapper(){
 		MapperFactory tmpFactory = new DefaultMapperFactory.Builder().build();
 		// Participant: XML(Payee) -> domain
-		tmpFactory.classMap( XmlPayee.class, ParticipantDomain.class)
+		tmpFactory.classMap( PayeeXml.class, ParticipantDomain.class)
 		.byDefault().register();
 		// Participant: XML(Payer) -> domain
-		tmpFactory.classMap( XmlPayer.class, ParticipantDomain.class)
+		tmpFactory.classMap( PayerXml.class, ParticipantDomain.class)
 		.byDefault().register();
 		// Participant: domain -> entity
 		tmpFactory.classMap(ParticipantDomain.class,ParticipantEntity.class)
 		.byDefault().register();
 		
 		// Document: XML -> domain
-		tmpFactory.classMap( XmlDocument.class, DocumentDomain.class)
+		tmpFactory.classMap( DocumentXml.class, DocumentDomain.class)
 		.byDefault().register();
 		// Document: domain -> entity
 		tmpFactory.classMap(DocumentDomain.class,Document.class)
@@ -42,7 +42,7 @@ public class MypperImpl implements Mapper {
 		
 
 		// Bank: XML -> domain
-		tmpFactory.classMap( XmlBank.class, BankDomain.class)
+		tmpFactory.classMap( BankXml.class, BankDomain.class)
 		.byDefault().register();
 		// Bank: domain -> entity
 		tmpFactory.classMap(BankDomain.class,BankEnity.class)
@@ -50,7 +50,7 @@ public class MypperImpl implements Mapper {
 		
 
 		// Payment: XML -> domain
-		tmpFactory.classMap( XmlPayment.class, PaymentDomain.class)
+		tmpFactory.classMap( PaymentXml.class, PaymentDomain.class)
 		.byDefault().register();
 		// Payment: domain -> entity
 		tmpFactory.classMap(PaymentDomain.class,PaymentEntity.class)

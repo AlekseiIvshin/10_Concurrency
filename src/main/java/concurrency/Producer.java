@@ -3,8 +3,8 @@ package concurrency;
 import domain.PaymentDomain;
 import ma.glasnost.orika.MapperFacade;
 import mapper.Mapper;
-import xmlreader.XmlPayment;
-import xmlreader.XmlPayments;
+import xml.elements.PaymentXml;
+import xml.elements.PaymentsXml;
 
 public class Producer implements Runnable{
 
@@ -17,7 +17,7 @@ public class Producer implements Runnable{
 	}
 
 	public void setPayment() {
-		XmlPayment payment = readPayment();
+		PaymentXml payment = readPayment();
 		if(payment!= null){
 			PaymentDomain domainPayment = mapper.map(payment, PaymentDomain.class);
 			try {
@@ -35,7 +35,7 @@ public class Producer implements Runnable{
 		}
 	}
 
-	private XmlPayment readPayment(){
+	private PaymentXml readPayment(){
 		// TODO read file and get payments. 
 		// I think need use stax and jaxb.. 
 		// 		GEt one payment -> to Drop -> next payment. 
