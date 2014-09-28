@@ -20,7 +20,6 @@ public class JAXBParserTest {
 	private final static String xmlLocation = "xmlExample.xml";
 	private final static String schemaLoc = "src\\test\\resources\\schema1.xsd";
 	
-	private Schema schema;
 	private XmlParser parser;
 	
 	@Before

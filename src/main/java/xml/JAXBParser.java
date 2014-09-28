@@ -36,8 +36,14 @@ public class JAXBParser implements XmlParser {
 	}
 
 	public void parse(String xmlLocation) throws FileNotFoundException, XmlException {
-		payments.clear();
 		File f = new File(xmlLocation);
+		parse(f);
+	}
+
+	@Override
+	public void parse(File xmlLocation) throws FileNotFoundException,
+			XmlException {
+		payments.clear();
 		PaymentsXml paymentsRoot = null;
 		JAXBContext context;
 		try {
@@ -46,18 +52,19 @@ public class JAXBParser implements XmlParser {
 			unmarsheller = context.createUnmarshaller();
 			unmarsheller.setSchema(schema);
 			paymentsRoot = (PaymentsXml) unmarsheller
-					.unmarshal(new FileInputStream(f));
+					.unmarshal(new FileInputStream(xmlLocation));
 		} catch (FileNotFoundException  e) {
-			logger.error("XML reading: File not found: " + f.getName(),e);
+			logger.error("XML reading: File not found: " + xmlLocation.getName(),e);
 			throw e;
 		}catch (JAXBException e) {
-			logger.error("XML reading: Error in unmarshalling file: " + f.getName(),e);
+			logger.error("XML reading: Error in unmarshalling file: " + xmlLocation.getName(),e);
 			throw new XmlException(e.getMessage());
 		}
 
 		if (paymentsRoot != null) {
 			payments = paymentsRoot.getPayments();
 		}
+		
 	}
 
 }
