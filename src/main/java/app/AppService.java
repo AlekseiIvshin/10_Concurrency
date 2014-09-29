@@ -10,11 +10,13 @@ import concurrency.Consumer;
 import concurrency.Drop;
 import concurrency.DropImpl;
 import concurrency.Producer;
+import dao.payment.PaymentDAOImpl;
 
 public class AppService {
 	private final Mapper mapper;
 	private final ExecutorService executorService;
 	private final Drop drop;
+	private File readedDirectory;
 	
 	public AppService(Drop drop, Mapper mapper){
 		executorService = Executors.newCachedThreadPool();
@@ -22,15 +24,22 @@ public class AppService {
 		this.mapper = mapper;
 	}
 	
-	
-	public void startService(File directory){
+	public void startService(File directory, int countOfProducers, int countOfConsumers){
 		try {
-			executorService.execute(new Producer(drop, mapper, directory));
+			if(countOfProducers <=0 || countOfConsumers <=0){
+				throw new Exception(" producers and consumers count must be greater then 0");
+			}
+			for(int i =0;i<countOfProducers;i++){
+				executorService.execute(new Producer(drop, mapper, directory));
+			}
+
+			for(int i =0;i<countOfConsumers;i++){
+				executorService.execute(new Consumer(drop, mapper, new PaymentDAOImpl()));
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		executorService.execute(new Consumer(drop, mapper));
 	}
 	
 	public void stopService(){

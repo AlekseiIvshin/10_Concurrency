@@ -17,15 +17,17 @@ public class Consumer implements Runnable {
 	
 	private final Drop drop;
 	private final Mapper mapper;
-	private final PaymentDAO dao = null;
+	private final PaymentDAO dao;
 	private final static int waitFileTimeout = 1000;
 
 	private Object getLock = new Object();
 	private Object persistEnity = new Object();
 
-	public Consumer(Drop drop, Mapper mapper) {
+	public Consumer(Drop drop, Mapper mapper, PaymentDAO dao) {
 		this.drop = drop;
 		this.mapper = mapper;
+		this.dao = dao;
+		logger.info("Consumer created");
 	}
 
 	public PaymentDomain getPaymentFromDrop() {

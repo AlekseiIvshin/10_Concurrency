@@ -46,6 +46,7 @@ public class Producer implements Runnable {
 			throw e;
 		}
 		destDirectory = readedDirectory;
+		logger.info("Producer created");
 	}
 
 	public void setDestDirectory(File destDirectory) {
