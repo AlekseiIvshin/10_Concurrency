@@ -8,8 +8,6 @@ import xml.elements.PaymentXml;
 
 public interface XmlParser {
 
-	List<PaymentXml> getPayments();
-
-	void parse(String xmlLocation) throws FileNotFoundException, XmlException;
-	void parse(File xmlLocation) throws FileNotFoundException, XmlException;
+	List<PaymentXml> parse(String xmlLocation) throws FileNotFoundException, XmlException;
+	List<PaymentXml> parse(File xmlLocation) throws FileNotFoundException, XmlException;
 }

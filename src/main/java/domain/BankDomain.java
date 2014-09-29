@@ -5,5 +5,5 @@ public interface BankDomain {
 	String getBIC();
 	void setBIC(String bic);
 	String getName();
-	void setName();
+	void setName(String name);
 }

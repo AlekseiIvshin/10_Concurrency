@@ -1,18 +1,8 @@
-package dao.payment;
+package domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
-@Embeddable
-public class BankEnity {
-
-	@Column(name = "bank_bic")
+public class BankDomainImpl implements BankDomain{
 	private String BIC;
-	@Column(name = "bank_name")
 	private String name;
-	
-	public BankEnity(){}
-	
 	public String getBIC() {
 		return BIC;
 	}

@@ -8,7 +8,7 @@ import common.ParticipantType;
 public interface ParticipantDomain {
 
 	String getAccount();
-	void setAccount();
+	void setAccount(String account);
 	DocumentDomain getDocument();
 	void setDocument(DocumentDomain document);
 	Set<String> getPhones();

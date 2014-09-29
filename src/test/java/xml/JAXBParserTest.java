@@ -13,6 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import xml.JAXBParser;
+import xml.XmlException;
+import xml.XmlParser;
 import xml.elements.PaymentXml;
 
 public class JAXBParserTest {
@@ -38,8 +41,7 @@ public class JAXBParserTest {
 
 	@Test
 	public void testGetPayments() throws FileNotFoundException, XmlException {
-		parser.parse(xmlLocation);
-		List<PaymentXml> payments = parser.getPayments();
+		List<PaymentXml> payments = parser.parse(xmlLocation);
 		assertNotNull(payments);
 		assertNotEquals(payments.size(), 0);
 		assertEquals(payments.get(0).getCash(), 100.0f,1.0f);
