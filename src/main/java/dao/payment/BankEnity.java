@@ -1,9 +1,28 @@
 package dao.payment;
 
-public interface BankEnity {
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
-	String getBIC();
-	void setBIC(String bic);
-	String getName();
-	void setName();
+@Embeddable
+public class BankEnity {
+
+	@Column(name = "bank_bic")
+	private String BIC;
+	@Column(name = "bank_name")
+	private String name;
+	
+	public BankEnity(){}
+	
+	public String getBIC() {
+		return BIC;
+	}
+	public void setBIC(String bIC) {
+		BIC = bIC;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 }

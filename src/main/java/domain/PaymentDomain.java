@@ -6,16 +6,16 @@ import dao.payment.BankEnity;
 import dao.payment.ParticipantEntity;
 
 public interface PaymentDomain {
-	ParticipantEntity getPayer();
-	void setPayer(ParticipantEntity payer);
-	ParticipantEntity getPayee();
-	void setPayee(ParticipantEntity payee);
-	BankEnity getBank();
-	void setBank(BankEnity bank);
+	ParticipantDomain getPayer();
+	void setPayer(ParticipantDomain payer);
+	ParticipantDomain getPayee();
+	void setPayee(ParticipantDomain payee);
+	BankDomain getBank();
+	void setBank(BankDomain bank);
 	float getCash();
 	void setCash(float cash);
-	Date getDateOfPayment();
-	void setDateOfPayment();
-	Date getExecutionDate();
-	void setExecutionDate();
+	Date getDateOfCreate();
+	void setDateOfCreate(Date date);
+	Date getDateOfExecute();
+	void setDateOfExecute(Date date);
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface PaymentDAO {
 
-	void add(PaymentEntity payment);
+	boolean add(PaymentEntity payment);
 
 	void remove();
 

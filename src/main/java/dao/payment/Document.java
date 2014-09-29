@@ -1,7 +1,10 @@
 package dao.payment;
 
+import javax.persistence.Embeddable;
+
 import common.DocumentType;
 
+@Embeddable
 public interface Document {
 
 	String getSeries();

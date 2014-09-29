@@ -13,7 +13,11 @@
     </encoder>		
 	</appender>
  
-  <root level="error">
+ <logger name="ma.glasnost" level="INFO">
+    <appender-ref ref="STDOUT" />
+  </logger>
+ 
+  <root level="DEBUG">
     <appender-ref ref="STDOUT" />
 	<appender-ref ref="FILE"/>
   </root>

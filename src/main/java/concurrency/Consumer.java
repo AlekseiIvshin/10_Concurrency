@@ -2,7 +2,7 @@ package concurrency;
 
 import xml.elements.PaymentXml;
 import dao.payment.PaymentDAO;
-import dao.payment.PaymentEntity;
+import dao.payment.PaymentEntityImpl;
 import domain.PaymentDomain;
 import mapper.Mapper;
 
@@ -31,7 +31,7 @@ public class Consumer implements Runnable{
 
 		// TODO ??? single resposonility ???
 		// TODO ??? Use interface in mapper ???
-		PaymentEntity payment = mapper.map(domainPayment, PaymentEntity.class);
+		PaymentEntityImpl payment = mapper.map(domainPayment, PaymentEntityImpl.class);
 		// TODO ??? single resposonility ???
 		dao.add(payment);
 	}

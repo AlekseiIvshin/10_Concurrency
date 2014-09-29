@@ -22,42 +22,45 @@ public class JAXBParser implements XmlParser {
 
 	final static Logger logger = LoggerFactory.getLogger(JAXBParser.class);
 
-	List<PaymentXml> payments;
 	Schema schema;
 
 	public JAXBParser(Schema schema) {
-		payments = new ArrayList<PaymentXml>();
 		this.schema = schema;
 	}
 
-	@Override
-	public List<PaymentXml> getPayments() {
-		return payments;
+	public List<PaymentXml> parse(String xmlLocation)
+			throws FileNotFoundException, XmlException {
+		File f = new File(xmlLocation);
+		return parse(f);
 	}
 
-	public void parse(String xmlLocation) throws FileNotFoundException, XmlException {
-		payments.clear();
-		File f = new File(xmlLocation);
+	@Override
+	public List<PaymentXml> parse(File xmlLocation)
+			throws FileNotFoundException, XmlException {
+
+		List<PaymentXml> payments = new ArrayList<PaymentXml>();
 		PaymentsXml paymentsRoot = null;
-		JAXBContext context;
 		try {
-			context = JAXBContext.newInstance(PaymentsXml.class);
-			Unmarshaller unmarsheller;
-			unmarsheller = context.createUnmarshaller();
+			Unmarshaller unmarsheller = JAXBContext.newInstance(
+					PaymentsXml.class).createUnmarshaller();
 			unmarsheller.setSchema(schema);
 			paymentsRoot = (PaymentsXml) unmarsheller
-					.unmarshal(new FileInputStream(f));
-		} catch (FileNotFoundException  e) {
-			logger.error("XML reading: File not found: " + f.getName(),e);
+					.unmarshal(new FileInputStream(xmlLocation));
+		} catch (FileNotFoundException e) {
+			logger.error(
+					"XML reading: File not found: " + xmlLocation.getName(), e);
 			throw e;
-		}catch (JAXBException e) {
-			logger.error("XML reading: Error in unmarshalling file: " + f.getName(),e);
+		} catch (JAXBException e) {
+			logger.error("XML reading: Error in unmarshalling file: "
+					+ xmlLocation.getName(), e);
 			throw new XmlException(e.getMessage());
 		}
 
 		if (paymentsRoot != null) {
 			payments = paymentsRoot.getPayments();
 		}
+		return payments;
+
 	}
 
 }

@@ -1,19 +1,34 @@
 package dao.payment;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public interface PaymentEntity {
+	long getId();
 
-	ParticipantEntity getPayer();
-	void setPayer(ParticipantEntity payer);
-	ParticipantEntity getPayee();
-	void setPayee(ParticipantEntity payee);
+	void setId(long id);
+
+	PayerEntiy getPayer();
+
+	void setPayer(PayerEntiy payer);
+
+	PayeeEntiy getPayee();
+
+	void setPayee(PayeeEntiy payee);
+
 	BankEnity getBank();
+
 	void setBank(BankEnity bank);
-	float getCash();
-	void setCash(float cash);
-	Date getDateOfPayment();
-	void setDateOfPayment();
-	Date getExecutionDate();
-	void setExecutionDate();
+
+	BigDecimal getCash();
+
+	void setCash(BigDecimal cash);
+
+	Date getDateOfCreate();
+
+	void setDateOfCreate(Date date);
+
+	Date getDateOfExecute();
+
+	void setDateOfExecute(Date date);
 }
