@@ -49,7 +49,7 @@ public class App {
 				if(!f.canRead() || !f.isDirectory()){
 					logger.info("{} is not directory or can't been readed", filePath);
 				}
-				app.startService(f);
+				app.startService(f,2,2);
 				break;
 			case "stop":
 				app.stopService();

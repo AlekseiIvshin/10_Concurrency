@@ -14,14 +14,10 @@ import org.junit.Test;
 
 public class PaymentDAOImplTest {
 
-	private EntityManager entityManager;
 	private PaymentEntity payment ;
 	
 	@Before
 	public void setUp(){
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("10_Concurrency");
-		entityManager = emf.createEntityManager();
 		
 		payment = new PaymentEntityImpl();
 		BankEnity bank = new BankEnity();
@@ -40,7 +36,7 @@ public class PaymentDAOImplTest {
 	}
 	@Test
 	public void testAdd() {
-		PaymentDAO paymentDAO = new PaymentDAOImpl(entityManager);
+		PaymentDAO paymentDAO = new PaymentDAOImpl();
 		paymentDAO.add(payment);
 	}
 

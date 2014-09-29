@@ -4,13 +4,17 @@ import java.util.List;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public class PaymentDAOImpl implements PaymentDAO {
 
 	EntityManager entityManager;
 	
-	public PaymentDAOImpl(EntityManager entityManager){
-		this.entityManager = entityManager;
+	public PaymentDAOImpl(){
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("10_Concurrency");
+		entityManager = emf.createEntityManager();
 	}
 	
 	@Override

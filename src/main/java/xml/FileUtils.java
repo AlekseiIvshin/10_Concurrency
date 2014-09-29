@@ -16,7 +16,7 @@ import concurrency.Producer;
 public class FileUtils {
 
 	final static Logger logger = LoggerFactory.getLogger(FileUtils.class);
-	
+
 	private final static FilenameFilter filter = new FilenameFilter() {
 
 		@Override
@@ -24,9 +24,9 @@ public class FileUtils {
 			return name.endsWith(".xml") && !name.startsWith("tmp");
 		}
 	};
-	
 
-	public static File getNextTmpFile(File fromDirectory,File destDirectory, boolean deleteRealFile) {
+	public static File getNextTmpFile(File fromDirectory, File destDirectory,
+			boolean deleteRealFile) {
 
 		File dest = null;
 		File[] files = fromDirectory.listFiles(filter);
@@ -64,8 +64,12 @@ public class FileUtils {
 				os.write(buffer, 0, length);
 			}
 		} finally {
-			is.close();
-			os.close();
+			if (is != null) {
+				is.close();
+			}
+			if (os != null) {
+				os.close();
+			}
 		}
 	}
 }

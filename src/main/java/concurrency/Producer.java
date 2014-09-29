@@ -46,6 +46,7 @@ public class Producer implements Runnable {
 			throw e;
 		}
 		destDirectory = readedDirectory;
+		logger.info("Producer created");
 	}
 
 	public void setDestDirectory(File destDirectory) {
@@ -55,7 +56,7 @@ public class Producer implements Runnable {
 	@Override
 	public void run() {
 
-		File tmpFile = null;
+		File tmpFile = null; 
 		List<PaymentXml> payments = null;
 		while (!Thread.interrupted()) {
 			// Get temp copy of file from readed directory
