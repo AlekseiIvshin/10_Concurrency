@@ -8053,3 +8053,14 @@ java.io.FileNotFoundException: src\test\resources\189010171838507211176914696495
 16:39:15.075 [pool-1-thread-4] INFO  concurrency.Consumer - Get payment from drop
 16:39:15.083 [pool-1-thread-4] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'date_of_create' cannot be null
 16:39:15.083 [pool-1-thread-3] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'date_of_create' cannot be null
+16:45:01.825 [main] INFO  concurrency.Producer - Producer created
+16:45:01.874 [pool-1-thread-1] INFO  xml.FileUtils - 5.xml -> tmp-168985724268309443014652454668933733171199.xml
+16:45:01.876 [pool-1-thread-3] INFO  xml.FileUtils - 6.xml -> tmp-165736441268309844457524250798472145208301.xml
+16:45:01.878 [pool-1-thread-2] INFO  xml.FileUtils - 7.xml -> tmp-167180154268309866777198656067605787236559.xml
+16:45:01.943 [pool-1-thread-2] INFO  concurrency.Producer - Read 2 payments
+16:45:01.943 [pool-1-thread-1] INFO  concurrency.Producer - Read 2 payments
+16:45:01.943 [pool-1-thread-3] INFO  concurrency.Producer - Read 2 payments
+16:45:02.421 [pool-1-thread-3] INFO  xml.FileUtils - 8.xml -> tmp-163897079268315297379307248429887258952113.xml
+16:45:02.423 [pool-1-thread-1] INFO  xml.FileUtils - 9.xml -> tmp-164963960268315319553316347048565361452488.xml
+16:45:02.433 [pool-1-thread-3] INFO  concurrency.Producer - Read 2 payments
+16:45:02.435 [pool-1-thread-1] INFO  concurrency.Producer - Read 2 payments

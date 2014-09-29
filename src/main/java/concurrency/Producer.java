@@ -56,7 +56,7 @@ public class Producer implements Runnable {
 	@Override
 	public void run() {
 
-		File tmpFile = null;
+		File tmpFile = null; 
 		List<PaymentXml> payments = null;
 		while (!Thread.interrupted()) {
 			// Get temp copy of file from readed directory
