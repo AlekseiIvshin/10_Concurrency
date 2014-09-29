@@ -16,8 +16,9 @@ public class PaymentDAOImpl implements PaymentDAO {
 	@Override
 	public boolean add(PaymentEntity payment) {
 		try{
+			entityManager.getTransaction().begin();
 			entityManager.persist(payment);
-			entityManager.flush();
+			entityManager.getTransaction().commit();
 			return true;
 		} catch(EntityExistsException e){
 			return false;

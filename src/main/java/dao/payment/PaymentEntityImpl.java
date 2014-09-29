@@ -15,36 +15,35 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "payments")
-public class PaymentEntityImpl implements PaymentEntity{
+public class PaymentEntityImpl implements PaymentEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private long id;
-	
+
 	@Embedded
 	private PayerEntiy payer;
-	
 
 	@Embedded
 	private PayeeEntiy payee;
-	
+
 	@Embedded
 	private BankEnity bank;
-	
+
 	@Column(name = "cash")
 	private BigDecimal cash;
 
-	@Column(name ="date_of_create")
+	@Column(name = "date_of_create")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateOfCreate;
-	
 
-	@Column(name ="date_of_execute")
+	@Column(name = "date_of_execute")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateOfExecute;
-	
-	public PaymentEntityImpl(){}
+
+	public PaymentEntityImpl() {
+	}
 
 	public long getId() {
 		return id;
