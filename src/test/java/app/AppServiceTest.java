@@ -26,9 +26,9 @@ public class AppServiceTest {
 		Drop drop = new DropImpl(10);
 		FileStorage fileStorage = new FileStorageImpl(10);
 		Mapper mapper = new MapperImpl();
-		AppService app;
+		AppServiceImpl app;
 		try {
-			app = new AppService(drop, mapper,fileStorage);
+			app = new AppServiceImpl(drop, mapper,fileStorage);
 		} catch (ServiceException e1) {
 			fail("Error");
 			return;

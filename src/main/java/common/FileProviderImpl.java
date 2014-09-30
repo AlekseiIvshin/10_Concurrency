@@ -75,4 +75,9 @@ public class FileProviderImpl implements FileProvider {
 		}
 	}
 
+	@Override
+	public File getTempDestination() {
+		return destDirectory;
+	}
+
 }

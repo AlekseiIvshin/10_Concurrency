@@ -9,6 +9,7 @@ import mapper.MapperImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import xml.FactoryException;
 import concurrency.quequestorages.Drop;
 import concurrency.quequestorages.DropImpl;
 import concurrency.quequestorages.FileStorage;
@@ -19,16 +20,14 @@ public class App {
 	final static Logger logger = LoggerFactory.getLogger(App.class);
 	
 	public static void main(String[] args) {
-		Drop drop = new DropImpl(10);
-		FileStorage fileStorage = new FileStorageImpl(10);
-		Mapper mapper = new MapperImpl();
 		AppService app;
 		try {
-			app = new AppService(drop, mapper,fileStorage);
-		} catch (ServiceException e) {
-			logger.error("AppService initialize", e);
+			app = new ServiceFactoryImpl().createService();
+		} catch (FactoryException e) {
+			logger.error("Service factory error",e);
 			return;
 		}
+		
 		processDirect(app);
 	}
 
@@ -54,7 +53,11 @@ public class App {
 				if(!f.canRead() || !f.isDirectory()){
 					logger.info("{} is not directory or can't been readed", filePath);
 				}
-				app.startService(f,2,2);
+				try {
+					app.startService();
+				} catch (ServiceException e) {
+					logger.error("Service starting error",e);
+				}
 				break;
 			case "stop":
 				app.stopService();

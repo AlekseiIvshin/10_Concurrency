@@ -21,4 +21,9 @@ public class ConfigReader {
 		return prop.getProperty(propertyName);
 
 	}
+	
+	public int getIntValue(String propertyName) throws IOException{
+		String value = getValue(propertyName);
+		return Integer.valueOf(value);
+	}
 }
