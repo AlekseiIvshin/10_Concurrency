@@ -16,7 +16,7 @@ import concurrency.Drop;
 import concurrency.DropImpl;
 import concurrency.FileStorage;
 import concurrency.FileStorageImpl;
-import concurrency.Producer;
+import concurrency.ProducerImpl;
 
 public class App {
 

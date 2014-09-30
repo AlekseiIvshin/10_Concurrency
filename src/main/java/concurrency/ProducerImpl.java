@@ -2,13 +2,8 @@ package concurrency;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.util.ArrayList;
 import java.util.List;
-
-import static java.nio.file.StandardWatchEventKinds.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,66 +17,55 @@ import xml.XmlException;
 import xml.XmlParser;
 import xml.elements.PaymentXml;
 
-public class Producer implements Runnable {
+public class ProducerImpl implements Producer {
 
-	final static Logger logger = LoggerFactory.getLogger(Producer.class);
+	final static Logger logger = LoggerFactory.getLogger(ProducerImpl.class);
 
 	private final Drop drop;
 	private final Mapper mapper;
-	private XmlParser parser;
-	private FileStorageReadOnly fileStorage;
+	private final XmlParser parser;
+	private final FileStorageReadOnly fileStorage;
 	private final FileProvider fileProvider;
 
 	private Object fileLock = new Object();
 	private Object sentLock = new Object();
 	private Object fileStorageLock = new Object();
 
-	public Producer(Drop drop, Mapper mapper, FileProvider fileProvider)
-			throws Exception {
+	public ProducerImpl(Drop drop, Mapper mapper, FileProvider fileProvider, XmlParser parser, FileStorageReadOnly fileStorage){
 		this.fileProvider = fileProvider;
 		this.drop = drop;
 		this.mapper = mapper;
-		try {
-			// TODO: set ot out!
-			parser = new JAXBBuilder().build();
-		} catch (XmlException e) {
-			logger.error("Parser build error", e);
-			throw e;
-		}
-		logger.info("Producer created");
+		this.parser = parser;
+		this.fileStorage = fileStorage;
 	}
+	
 
 	@Override
 	public void run() {
-
-		File tmpFile = null;
-		List<PaymentXml> payments = null;
+		List<PaymentXml> payments = new ArrayList<PaymentXml>();
 		while (!Thread.interrupted()) {
 			// Get temp copy of file from readed directory
 			File f = getNextFileFromStorage();
 			
-			tmpFile = getNextTmpFileAndDeleteReal(f);
+			File tmpFile = getNextTmpFileAndDeleteReal(f);
 
 			// Get Payments from file
 			try {
-				payments = getPayments(tmpFile);
+				payments.addAll(getPayments(tmpFile));
 			} catch (Exception e1) {
 				logger.error("Parse error", e1);
 			}
 			fileProvider.close(tmpFile);
 
-			if (payments == null || payments.isEmpty()) {
+			if (payments.isEmpty()) {
 				continue;
 			}
 
+			
 			// Set payments to drop
-			setPaymentsToDrop(payments);
+			setPaymentsToDrop(map(payments));
+			payments.clear();
 		}
-
-		// Delete temp directory
-//		if (destDirectory != watcher.) {
-//			destDirectory.deleteOnExit();
-//		}
 	}
 
 	private List<PaymentXml> getPayments(File file) throws Exception {
@@ -99,12 +83,10 @@ public class Producer implements Runnable {
 			return payments;
 		} catch (FileNotFoundException | XmlException e) {
 			logger.error("Parse error", e);
-			e.printStackTrace();
 			throw e;
 		}
 
 	}
-
 
 	private File getNextFileFromStorage() {
 		File f = null;
@@ -120,20 +102,25 @@ public class Producer implements Runnable {
 	}
 	
 	private File getNextTmpFileAndDeleteReal(File f){
-		File tmpFile = null;
 		synchronized (fileLock) {
-			tmpFile = fileProvider.copyToTempFile(f, true);
+			return fileProvider.copyToTempFile(f, true);
 		}
-		return tmpFile;
 	}
 
-	private void setPaymentsToDrop(List<PaymentXml> payments) {
+	private List<PaymentDomain> map(List<PaymentXml> payments){
+		List<PaymentDomain> result = new ArrayList<PaymentDomain>();
 		for (PaymentXml payment : payments) {
-			PaymentDomain domainPayment = mapper.map(payment,
-					PaymentDomainImpl.class);
+			result.add( mapper.map(payment,
+					PaymentDomainImpl.class));
+		}
+		return result;
+	}
+	
+	private void setPaymentsToDrop(List<PaymentDomain> payments) {
+		for (PaymentDomain payment : payments) {
 			try {
 				synchronized (sentLock) {
-					while (!drop.setPayment(domainPayment)) {
+					while (!drop.setPayment(payment)) {
 						try {
 							sentLock.wait();
 						} catch (InterruptedException e) {

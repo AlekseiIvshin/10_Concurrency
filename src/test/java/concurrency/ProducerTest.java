@@ -16,11 +16,11 @@ import common.FileProviderImpl;
 
 import concurrency.Drop;
 import concurrency.DropImpl;
-import concurrency.Producer;
+import concurrency.ProducerImpl;
 
 public class ProducerTest {
 
-	Producer prod;
+	ProducerImpl prod;
 	Drop drop;
 	private ExecutorService executorService;
 	File directory;
@@ -33,7 +33,7 @@ public class ProducerTest {
 			return;
 		}
 		try {
-			prod = new Producer(drop, new MapperImpl(), new FileProviderImpl(directory));
+			prod = new ProducerImpl(drop, new MapperImpl(), new FileProviderImpl(directory));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
