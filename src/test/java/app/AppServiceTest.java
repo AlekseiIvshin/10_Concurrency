@@ -11,6 +11,8 @@ import org.junit.Test;
 
 import concurrency.Drop;
 import concurrency.DropImpl;
+import concurrency.FileStorage;
+import concurrency.FileStorageImpl;
 
 public class AppServiceTest {
 
@@ -22,8 +24,15 @@ public class AppServiceTest {
 			fail("It must be directory");
 		}
 		Drop drop = new DropImpl(10);
+		FileStorage fileStorage = new FileStorageImpl(10);
 		Mapper mapper = new MapperImpl();
-		AppService app = new AppService(drop, mapper);
+		AppService app;
+		try {
+			app = new AppService(drop, mapper,fileStorage);
+		} catch (ServiceException e1) {
+			fail("Error");
+			return;
+		}
 		app.startService(f,2,2);
 		try {
 			Thread.sleep(10000);

@@ -14,6 +14,8 @@ import mapper.MapperImpl;
 import concurrency.Consumer;
 import concurrency.Drop;
 import concurrency.DropImpl;
+import concurrency.FileStorage;
+import concurrency.FileStorageImpl;
 import concurrency.Producer;
 
 public class App {
@@ -22,8 +24,15 @@ public class App {
 	
 	public static void main(String[] args) {
 		Drop drop = new DropImpl(10);
+		FileStorage fileStorage = new FileStorageImpl(10);
 		Mapper mapper = new MapperImpl();
-		AppService app = new AppService(drop, mapper);
+		AppService app;
+		try {
+			app = new AppService(drop, mapper,fileStorage);
+		} catch (ServiceException e) {
+			logger.error("AppService initialize", e);
+			return;
+		}
 		processDirect(app);
 	}
 

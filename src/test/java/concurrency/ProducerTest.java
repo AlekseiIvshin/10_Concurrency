@@ -12,6 +12,8 @@ import mapper.MapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 
+import common.FileProviderImpl;
+
 import concurrency.Drop;
 import concurrency.DropImpl;
 import concurrency.Producer;
@@ -31,7 +33,7 @@ public class ProducerTest {
 			return;
 		}
 		try {
-			prod = new Producer(drop, new MapperImpl(), directory);
+			prod = new Producer(drop, new MapperImpl(), new FileProviderImpl(directory));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

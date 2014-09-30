@@ -2,13 +2,18 @@ package concurrency;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.List;
+
+import static java.nio.file.StandardWatchEventKinds.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import common.FileUtils;
-
+import common.FileProvider;
 import domain.PaymentDomain;
 import domain.PaymentDomainImpl;
 import mapper.Mapper;
@@ -24,19 +29,19 @@ public class Producer implements Runnable {
 	private final Drop drop;
 	private final Mapper mapper;
 	private XmlParser parser;
-	private File readedDirectory;
+	//private File readedDirectory;
 	private File destDirectory;
 	private final static int waitFileTimeout = 1000;
+	private FileStorageReadOnly fileStorage;
+	private final FileProvider fileProvider;
 
 	private Object fileLock = new Object();
 	private Object sentLock = new Object();
+	private Object fileStorageLock = new Object();
 
-	public Producer(Drop drop, Mapper mapper, File directoryForRead)
+	public Producer(Drop drop, Mapper mapper, FileProvider fileProvider)
 			throws Exception {
-		if (!directoryForRead.isDirectory()) {
-			throw new Exception("Argument is not directory");
-		}
-		this.readedDirectory = directoryForRead;
+		this.fileProvider = fileProvider;
 		this.drop = drop;
 		this.mapper = mapper;
 		try {
@@ -46,7 +51,6 @@ public class Producer implements Runnable {
 			logger.error("Parser build error", e);
 			throw e;
 		}
-		destDirectory = readedDirectory;
 		logger.info("Producer created");
 	}
 
@@ -57,11 +61,13 @@ public class Producer implements Runnable {
 	@Override
 	public void run() {
 
-		File tmpFile = null; 
+		File tmpFile = null;
 		List<PaymentXml> payments = null;
 		while (!Thread.interrupted()) {
 			// Get temp copy of file from readed directory
-			tmpFile = getNextFile();
+			File f = getNextFileFromStorage();
+			
+			tmpFile = getNextTmpFileAndDeleteReal(f);
 
 			// Get Payments from file
 			try {
@@ -80,9 +86,9 @@ public class Producer implements Runnable {
 		}
 
 		// Delete temp directory
-		if (destDirectory != readedDirectory) {
-			destDirectory.deleteOnExit();
-		}
+//		if (destDirectory != watcher.) {
+//			destDirectory.deleteOnExit();
+//		}
 	}
 
 	private List<PaymentXml> getPayments(File file) throws Exception {
@@ -93,9 +99,9 @@ public class Producer implements Runnable {
 
 		try {
 			List<PaymentXml> payments = null;
-			//synchronized (tmpFileReadLock) {
-				payments = parser.parse(file);
-			//}
+			// synchronized (tmpFileReadLock) {
+			payments = parser.parse(file);
+			// }
 			logger.info("Read {} payments", payments.size());
 			return payments;
 		} catch (FileNotFoundException | XmlException e) {
@@ -106,22 +112,29 @@ public class Producer implements Runnable {
 
 	}
 
-	private File getNextFile() {
+
+	private File getNextFileFromStorage() {
+		File f = null;
+		synchronized (fileStorageLock) {
+			while ((f = fileStorage.getNextFile())==null) {
+				try {
+					fileStorageLock.wait();
+				} catch (InterruptedException e) {}
+			}
+			fileStorageLock.notifyAll();
+		}
+		return f;
+	}
+	
+	private File getNextTmpFileAndDeleteReal(File f){
 		File tmpFile = null;
 		synchronized (fileLock) {
-			while ((tmpFile = FileUtils.getNextTmpFile(readedDirectory,
-					destDirectory, true)) == null) {
-				try {
-					fileLock.wait(waitFileTimeout);
-				} catch (InterruptedException e) {
-				}
-			}
-			fileLock.notifyAll();
+			tmpFile = fileProvider.copyToTempFile(f, true);
 		}
 		return tmpFile;
 	}
-	
-	private void setPaymentsToDrop(List<PaymentXml> payments){
+
+	private void setPaymentsToDrop(List<PaymentXml> payments) {
 		for (PaymentXml payment : payments) {
 			PaymentDomain domainPayment = mapper.map(payment,
 					PaymentDomainImpl.class);
@@ -130,7 +143,8 @@ public class Producer implements Runnable {
 					while (!drop.setPayment(domainPayment)) {
 						try {
 							sentLock.wait();
-						} catch (InterruptedException e) {}
+						} catch (InterruptedException e) {
+						}
 					}
 					sentLock.notifyAll();
 				}
