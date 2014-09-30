@@ -9,6 +9,9 @@ import mapper.MapperImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import appservice.AppService;
+import appservice.ServiceException;
+import appservice.ServiceFactoryImpl;
 import xml.FactoryException;
 import concurrency.quequestorages.Drop;
 import concurrency.quequestorages.DropImpl;
@@ -42,7 +45,7 @@ public class App {
 				continue;
 			}
 			String currentCommand = splittedCommand[0].toLowerCase();
-			switch (current) {
+			switch (currentCommand) {
 			case "start":
 				if(splittedCommand.length<1){
 					logger.info("Set path to directory with XML files: start <Path>");

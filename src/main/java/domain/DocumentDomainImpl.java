@@ -1,7 +1,5 @@
 package domain;
 
-import common.DocumentType;
-
 public class DocumentDomainImpl implements DocumentDomain {
 	private String series;
 	private String number;

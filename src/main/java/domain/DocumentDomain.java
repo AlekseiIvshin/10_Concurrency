@@ -1,7 +1,5 @@
 package domain;
 
-import common.DocumentType;
-
 public interface DocumentDomain {
 
 	String getSeries();

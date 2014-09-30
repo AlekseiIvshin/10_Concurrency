@@ -1,4 +1,4 @@
-package app;
+package appservice;
 
 public class ServiceException extends Exception{
 

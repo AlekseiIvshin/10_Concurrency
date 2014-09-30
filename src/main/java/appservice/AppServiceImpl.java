@@ -1,4 +1,4 @@
-package app;
+package appservice;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +14,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import common.ConfigReader;
 import common.FileProvider;
-import common.FileProviderImpl;
 import xml.FactoryException;
 import xml.provider.JAXBProviderFactory;
 import xml.provider.XmlProvider;
@@ -51,8 +49,6 @@ public class AppServiceImpl implements AppService {
 
 	//private final ConfigReader configReader = new ConfigReader();
 
-	private final int defaultProducerCount = 2;
-	private final int defaultConsumerCount = 2;
 
 	private final int producerCount;
 	private final int consumerCount;
