@@ -6,4 +6,5 @@ public interface FileProvider {
 
 	File copyToTempFile(File sourceFile,boolean deleteSoruceFile);
 	void close();
+	void close(File f);
 }

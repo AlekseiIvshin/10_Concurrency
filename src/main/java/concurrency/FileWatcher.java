@@ -61,6 +61,10 @@ public class FileWatcher implements Runnable {
 		logger.info("Set existing files on {} to file queque",sourceDirectory);
 		setExistingFilesToStorage();
 		logger.info("Start watch to {}", sourceDirectory);
+		scanDirectory();
+	}
+	
+	private void scanDirectory(){
 		while (!Thread.interrupted()) {
 			WatchKey key;
 			try {
@@ -79,24 +83,27 @@ public class FileWatcher implements Runnable {
 
 				WatchEvent<Path> ev = (WatchEvent<Path>) event;
 				File fileName = ev.context().toFile();
-				synchronized (storageLock) {
-					while (!fileStorage.setFile(fileName)) {
-						try {
-							storageLock.wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							logger.error("Thread interrupted",e);
-							return;
-						}
-					}
-					logger.info("Setted {} to file queque", fileName.getName());
-					storageLock.notifyAll();
-				}
+				setFileToQueque(fileName);
+				logger.info("Setted {} to file queque", fileName.getName());
 			}
 			key.reset();
 		}
 	}
 	
+	private void setFileToQueque(File f){
+		synchronized (storageLock) {
+			while (!fileStorage.setFile(f)) {
+				try {
+					storageLock.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					logger.error("Thread interrupted",e);
+					return;
+				}
+			}
+			storageLock.notifyAll();
+		}
+	}
 	private void setExistingFilesToStorage(){
 		File[] files = sourceDirectory.listFiles(filter);
 		for(File f: files){

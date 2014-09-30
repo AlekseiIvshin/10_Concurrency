@@ -68,4 +68,11 @@ public class FileProviderImpl implements FileProvider {
 		}
 	}
 
+	@Override
+	public void close(File f) {
+		if(f!=null){
+			f.delete();
+		}
+	}
+
 }

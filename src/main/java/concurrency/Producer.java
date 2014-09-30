@@ -29,9 +29,6 @@ public class Producer implements Runnable {
 	private final Drop drop;
 	private final Mapper mapper;
 	private XmlParser parser;
-	//private File readedDirectory;
-	private File destDirectory;
-	private final static int waitFileTimeout = 1000;
 	private FileStorageReadOnly fileStorage;
 	private final FileProvider fileProvider;
 
@@ -54,10 +51,6 @@ public class Producer implements Runnable {
 		logger.info("Producer created");
 	}
 
-	public void setDestDirectory(File destDirectory) {
-		this.destDirectory = destDirectory;
-	}
-
 	@Override
 	public void run() {
 
@@ -75,7 +68,7 @@ public class Producer implements Runnable {
 			} catch (Exception e1) {
 				logger.error("Parse error", e1);
 			}
-			tmpFile.delete();
+			fileProvider.close(tmpFile);
 
 			if (payments == null || payments.isEmpty()) {
 				continue;
