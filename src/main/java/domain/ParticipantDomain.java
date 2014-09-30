@@ -7,13 +7,35 @@ import common.ParticipantType;
 
 public interface ParticipantDomain {
 
-	String getAccount();
-	void setAccount(String account);
-	DocumentDomain getDocument();
-	void setDocument(DocumentDomain document);
-	Set<String> getPhones();
-	void setPhones(Set<String> phones);
-	String getAddress();
-	void setAddress(String address);
-	ParticipantType getType();
+	public String getSurname();
+
+	public void setSurname(String surname);
+
+	public String getName();
+
+	public void setName(String name);
+
+	public String getPatronymic() ;
+
+	public void setPatronymic(String patronymic);
+
+	public String getAccount();
+
+	public void setAccount(String account);
+
+	public String getOrganizationName();
+
+	public void setOrganizationName(String organizationName);
+
+	public DocumentDomain getDocument();
+
+	public void setDocument(DocumentDomain document);
+
+	public String getPhone();
+
+	public void setPhone(String phone);
+
+	public String getAddress();
+
+	public void setAddress(String address);
 }

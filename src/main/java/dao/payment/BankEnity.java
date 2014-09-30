@@ -1,10 +1,12 @@
 package dao.payment;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class BankEnity {
+public class BankEnity  implements Serializable{
 
 	@Column(name = "bank_bic")
 	private String BIC;

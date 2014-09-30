@@ -3,12 +3,16 @@ package dao.payment;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,13 +24,15 @@ public class PaymentEntityImpl implements PaymentEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
-	private long id;
+	private int id;
 
-	@Embedded
-	private PayerEntiy payer;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="payer_account")
+	private PaymentMemberImpl payer;
 
-	@Embedded
-	private PayeeEntiy payee;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="payee_account")
+	private PaymentMemberImpl payee;
 
 	@Embedded
 	private BankEnity bank;
@@ -41,31 +47,32 @@ public class PaymentEntityImpl implements PaymentEntity {
 	@Column(name = "date_of_execute")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateOfExecute;
+	
 
 	public PaymentEntityImpl() {
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public PayerEntiy getPayer() {
+	public PaymentMemberImpl getPayer() {
 		return payer;
 	}
 
-	public void setPayer(PayerEntiy payer) {
+	public void setPayer(PaymentMemberImpl payer) {
 		this.payer = payer;
 	}
 
-	public PayeeEntiy getPayee() {
+	public PaymentMemberImpl getPayee() {
 		return payee;
 	}
 
-	public void setPayee(PayeeEntiy payee) {
+	public void setPayee(PaymentMemberImpl payee) {
 		this.payee = payee;
 	}
 

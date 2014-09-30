@@ -23,13 +23,29 @@ public class PaymentDAOImplTest {
 		BankEnity bank = new BankEnity();
 		bank.setBIC("123123");
 		bank.setName("Some name");
-		PayerEntiy payerEntiy = new PayerEntiy();
-		payerEntiy.setName("Ivanesyan");
-		PayeeEntiy payeeEntiy = new PayeeEntiy();
-		payeeEntiy.setName("Sarumyan");
+		PaymentMemberImpl payer = new PaymentMemberImpl();
+		payer.setId(1);
+		payer.setAccount("10000000000000000000");
+		payer.setAddress("adadsa");
+		Document payerDoc = new Document();
+		payerDoc.setType("passport");
+		payerDoc.setNumber("123123");
+		payerDoc.setSeries("0990");
+		payer.setDocument(payerDoc);
+
+		PaymentMemberImpl payee = new PaymentMemberImpl();
+		payee.setId(2);
+		payer.setAccount("10000000000000000002");
+		payer.setAddress("adadsa");
+		Document payeeDoc = new Document();
+		payerDoc.setType("passport");
+		payerDoc.setNumber("995595");
+		payerDoc.setSeries("0990");
+		payer.setDocument(payeeDoc);
+		
 		payment.setBank(bank);
-		payment.setPayee(payeeEntiy);
-		payment.setPayer(payerEntiy);
+		payment.setPayee(payer);
+		payment.setPayer(payee);
 		payment.setCash(new BigDecimal(1000));
 		payment.setDateOfCreate(new Date());
 		payment.setDateOfExecute(new Date());

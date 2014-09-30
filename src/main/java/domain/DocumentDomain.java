@@ -8,6 +8,6 @@ public interface DocumentDomain {
 	void setSeries(String number);
 	String getNumber();
 	void setNumber(String number);
-	DocumentType getType();
-	void setType(DocumentType type);
+	String getType();
+	void setType(String type);
 }

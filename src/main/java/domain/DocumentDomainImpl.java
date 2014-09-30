@@ -5,7 +5,7 @@ import common.DocumentType;
 public class DocumentDomainImpl implements DocumentDomain {
 	private String series;
 	private String number;
-	private DocumentType type;
+	private String type;
 	public String getSeries() {
 		return series;
 	}
@@ -18,10 +18,10 @@ public class DocumentDomainImpl implements DocumentDomain {
 	public void setNumber(String number) {
 		this.number = number;
 	}
-	public DocumentType getType() {
+	public String getType() {
 		return type;
 	}
-	public void setType(DocumentType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 }

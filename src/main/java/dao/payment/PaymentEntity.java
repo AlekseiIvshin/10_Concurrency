@@ -4,17 +4,17 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public interface PaymentEntity {
-	long getId();
+	int getId();
 
-	void setId(long id);
+	void setId(int id);
 
-	PayerEntiy getPayer();
+	PaymentMemberImpl getPayer();
 
-	void setPayer(PayerEntiy payer);
+	void setPayer(PaymentMemberImpl payer);
 
-	PayeeEntiy getPayee();
+	PaymentMemberImpl getPayee();
 
-	void setPayee(PayeeEntiy payee);
+	void setPayee(PaymentMemberImpl payee);
 
 	BankEnity getBank();
 

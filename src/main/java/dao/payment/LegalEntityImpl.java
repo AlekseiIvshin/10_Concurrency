@@ -1,55 +1,30 @@
-package domain;
-
-import java.util.Set;
+package dao.payment;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-import common.ParticipantType;
-import dao.payment.Document;
+@Entity
+@Table(name = "paymentparticipant")
+public class LegalEntityImpl implements PaymentMember {
 
-public class ParticipantDomainImpl implements ParticipantDomain {
-	
+	@Id
+	@Column(name = "account")
 	private String account;
-	
-	private String surname;
 
-	private String name;
-
-	private String patronymic;
-
+	@Column(name = "organization_name")
 	private String organizationName;
 
-	private DocumentDomain document;
+	@Embedded
+	private Document document;
 
+	@Column(name = "phone")
 	private String phone;
 
+	@Column(name = "address")
 	private String address;
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPatronymic() {
-		return patronymic;
-	}
-
-	public void setPatronymic(String patronymic) {
-		this.patronymic = patronymic;
-	}
 
 	public String getAccount() {
 		return account;
@@ -67,11 +42,11 @@ public class ParticipantDomainImpl implements ParticipantDomain {
 		this.organizationName = organizationName;
 	}
 
-	public DocumentDomain getDocument() {
+	public Document getDocument() {
 		return document;
 	}
 
-	public void setDocument(DocumentDomain document) {
+	public void setDocument(Document document) {
 		this.document = document;
 	}
 
@@ -90,4 +65,35 @@ public class ParticipantDomainImpl implements ParticipantDomain {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	@Override
+	public String getSurname() {
+		return null;
+	}
+
+	@Override
+	public void setSurname(String surname) {
+
+	}
+
+	@Override
+	public String getName() {
+		return null;
+	}
+
+	@Override
+	public void setName(String name) {
+
+	}
+
+	@Override
+	public String getPatronymic() {
+		return null;
+	}
+
+	@Override
+	public void setPatronymic(String patronymic) {
+
+	}
+
 }

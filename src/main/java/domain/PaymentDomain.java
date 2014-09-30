@@ -2,9 +2,6 @@ package domain;
 
 import java.util.Date;
 
-import dao.payment.BankEnity;
-import dao.payment.ParticipantEntity;
-
 public interface PaymentDomain {
 	ParticipantDomain getPayer();
 	void setPayer(ParticipantDomain payer);

@@ -1,31 +1,43 @@
-package domain;
-
-import java.util.Set;
+package dao.payment;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-import common.ParticipantType;
-import dao.payment.Document;
-
-public class ParticipantDomainImpl implements ParticipantDomain {
-	
+@Entity
+@Table(name = "paymentparticipant")
+public class IndividualImpl implements PaymentMember {
+	@Id
+	@Column(name = "account")
 	private String account;
-	
+
+	@Column(name = "surname")
 	private String surname;
 
+	@Column(name = "name")
 	private String name;
 
+	@Column(name = "patronymic")
 	private String patronymic;
 
-	private String organizationName;
+	@Embedded
+	private Document document;
 
-	private DocumentDomain document;
-
+	@Column(name = "phone")
 	private String phone;
 
+	@Column(name = "address")
 	private String address;
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
 	public String getSurname() {
 		return surname;
@@ -51,27 +63,11 @@ public class ParticipantDomainImpl implements ParticipantDomain {
 		this.patronymic = patronymic;
 	}
 
-	public String getAccount() {
-		return account;
-	}
-
-	public void setAccount(String account) {
-		this.account = account;
-	}
-
-	public String getOrganizationName() {
-		return organizationName;
-	}
-
-	public void setOrganizationName(String organizationName) {
-		this.organizationName = organizationName;
-	}
-
-	public DocumentDomain getDocument() {
+	public Document getDocument() {
 		return document;
 	}
 
-	public void setDocument(DocumentDomain document) {
+	public void setDocument(Document document) {
 		this.document = document;
 	}
 
@@ -90,4 +86,14 @@ public class ParticipantDomainImpl implements ParticipantDomain {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	@Override
+	public String getOrganizationName() {
+		return null;
+	}
+
+	@Override
+	public void setOrganizationName(String organizationName) {
+	}
+
 }
