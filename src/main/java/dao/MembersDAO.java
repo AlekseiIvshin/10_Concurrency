@@ -1,4 +1,4 @@
-package dao.payment;
+package dao;
 
 import dao.entities.PaymentMember;
 

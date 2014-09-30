@@ -1,4 +1,4 @@
-package dao.payment;
+package dao;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;

@@ -12,6 +12,8 @@ import javax.persistence.Persistence;
 import org.junit.Before;
 import org.junit.Test;
 
+import dao.PaymentDAO;
+import dao.PaymentDAOImpl;
 import dao.entities.BankEnity;
 import dao.entities.Document;
 import dao.entities.PaymentEntity;

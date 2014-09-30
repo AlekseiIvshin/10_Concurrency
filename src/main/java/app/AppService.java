@@ -10,7 +10,7 @@ import concurrency.Consumer;
 import concurrency.Drop;
 import concurrency.DropImpl;
 import concurrency.Producer;
-import dao.payment.PaymentDAOImpl;
+import dao.PaymentDAOImpl;
 
 public class AppService {
 	private final Mapper mapper;

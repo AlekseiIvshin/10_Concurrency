@@ -7,10 +7,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.FileUtils;
+
 import domain.PaymentDomain;
 import domain.PaymentDomainImpl;
 import mapper.Mapper;
-import xml.FileUtils;
 import xml.JAXBBuilder;
 import xml.XmlException;
 import xml.XmlParser;

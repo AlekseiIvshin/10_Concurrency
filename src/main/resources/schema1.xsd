@@ -33,7 +33,9 @@
     <xs:sequence>
       <xs:element name="address" type="xs:string"/>
       <xs:element name="phone" type="xs:string"/>
-      <xs:element name="fullName" type="xs:string"/>
+      <xs:element name="surname" type="xs:string"/>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="patronymic" type="xs:string"/>
       <xs:element name="document" type="document"/>
       <xs:element name="account" type="xs:string"/>
     </xs:sequence>

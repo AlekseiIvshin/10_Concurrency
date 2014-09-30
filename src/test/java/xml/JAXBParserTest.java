@@ -45,7 +45,7 @@ public class JAXBParserTest {
 		assertNotNull(payments);
 		assertNotEquals(payments.size(), 0);
 		assertEquals(payments.get(0).getCash(), 100.0f,1.0f);
-		assertEquals(payments.get(0).getPayer().getFullName(), "Ivonesyan");
+		assertEquals(payments.get(0).getPayer().getSurname(), "Ivonesyan");
 	}
 
 	@Test
