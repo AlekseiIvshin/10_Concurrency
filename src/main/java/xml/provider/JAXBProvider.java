@@ -1,10 +1,10 @@
-package xml;
+package xml.provider;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -14,52 +14,57 @@ import javax.xml.validation.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import xml.XmlException;
 import xml.elements.PaymentXml;
 import xml.elements.PaymentsXml;
 
-public class JAXBParser implements XmlParser {
+public class JAXBProvider implements XmlProvider{
 
-	final static Logger logger = LoggerFactory.getLogger(JAXBParser.class);
+	
+	final static Logger logger = LoggerFactory.getLogger(JAXBProvider.class);
 
 	Schema schema;
 	Unmarshaller unmarshaller;
-
-	public JAXBParser(Schema schema) throws JAXBException {
+	Queue<PaymentXml> data;
+	int currentPosition;
+	
+	public JAXBProvider(Schema schema) throws JAXBException {
+		data = new LinkedBlockingQueue<PaymentXml>();
+		
 		this.schema = schema;
 		unmarshaller = JAXBContext.newInstance(
 				PaymentsXml.class).createUnmarshaller();
 		unmarshaller.setSchema(schema);
 	}
-
-	public List<PaymentXml> parse(String xmlLocation)
-			throws FileNotFoundException, XmlException {
-		File f = new File(xmlLocation);
-		return parse(f);
-	}
-
+	
 	@Override
-	public List<PaymentXml> parse(File xmlLocation)
-			throws FileNotFoundException, XmlException {
-
+	public void parse(File xml) throws FileNotFoundException, XmlException {
+		data.clear();
 		PaymentsXml paymentsRoot = null;
 		try {
 			paymentsRoot = (PaymentsXml) unmarshaller
-					.unmarshal(new FileInputStream(xmlLocation));
+					.unmarshal(new FileInputStream(xml));
 		} catch (FileNotFoundException e) {
 			logger.error(
-					"XML reading: File not found: " + xmlLocation.getName(), e);
+					"XML reading: File not found: " + xml.getName(), e);
 			throw e;
 		} catch (JAXBException e) {
 			logger.error("XML reading: Error in unmarshalling file: "
-					+ xmlLocation.getName(), e);
+					+ xml.getName(), e);
 			throw new XmlException(e.getMessage());
 		}
 
 		if (paymentsRoot != null) {
-			return paymentsRoot.getPayments();
+			for(PaymentXml payment: paymentsRoot.getPayments()){
+				data.add(payment);
+			}
 		}
-		return null;
-
 	}
 
+	@Override
+	public PaymentXml getNextPayment() {
+		return data.poll();
+	}
+
+	
 }

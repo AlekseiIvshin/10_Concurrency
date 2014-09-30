@@ -1,14 +1,15 @@
-package concurrency;
+package concurrency.producer;
 
 import common.FileProvider;
-
+import concurrency.quequestorages.Drop;
+import concurrency.quequestorages.FileStorageReadOnly;
 import mapper.Mapper;
-import xml.XmlParser;
+import xml.provider.XmlProvider;
 
 public class ProducerFactoryImpl implements ProducerFactory {
 	private Drop drop;
 	private Mapper mapper;
-	private XmlParser parser;
+	private XmlProvider parser;
 	private FileStorageReadOnly fileStorage;
 	private FileProvider fileProvider;
 	
@@ -32,7 +33,7 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	}
 
 	@Override
-	public ProducerFactory addXmlParser(XmlParser parser) {
+	public ProducerFactory addXmlProvider(XmlProvider parser) {
 		this.parser = parser;
 		return this;
 	}

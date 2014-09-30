@@ -42,7 +42,7 @@ public class FileProviderImpl implements FileProvider {
 	}
 	@Override
 	public void close() {
-		if(destDirectory!=null)
+		if(destDirectory!=null && destDirectory.listFiles().length==0)
 			destDirectory.delete();
 	}
 	

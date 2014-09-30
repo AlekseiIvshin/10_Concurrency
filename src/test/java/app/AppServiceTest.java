@@ -9,10 +9,10 @@ import mapper.MapperImpl;
 
 import org.junit.Test;
 
-import concurrency.Drop;
-import concurrency.DropImpl;
-import concurrency.FileStorage;
-import concurrency.FileStorageImpl;
+import concurrency.quequestorages.Drop;
+import concurrency.quequestorages.DropImpl;
+import concurrency.quequestorages.FileStorage;
+import concurrency.quequestorages.FileStorageImpl;
 
 public class AppServiceTest {
 

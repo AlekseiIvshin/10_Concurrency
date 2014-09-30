@@ -1,8 +1,9 @@
-package concurrency;
+package concurrency.producer;
 
 import common.FileProvider;
-
-import xml.XmlParser;
+import concurrency.quequestorages.Drop;
+import concurrency.quequestorages.FileStorageReadOnly;
+import xml.provider.XmlProvider;
 import mapper.Mapper;
 
 public interface ProducerFactory {
@@ -10,7 +11,7 @@ public interface ProducerFactory {
 	ProducerFactory addDropStorage(Drop drop);
 	ProducerFactory addMapper(Mapper mapper);
 	ProducerFactory addFileQuequeStorage(FileStorageReadOnly fileStorage);
-	ProducerFactory addXmlParser(XmlParser parser);
+	ProducerFactory addXmlProvider(XmlProvider parser);
 	ProducerFactory addFileProvider(FileProvider fileProvider);
 	Producer createProducer();
 	

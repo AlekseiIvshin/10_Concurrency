@@ -12,11 +12,11 @@ import xml.JAXBParser;
 import mapper.Mapper;
 import mapper.MapperImpl;
 import concurrency.Consumer;
-import concurrency.Drop;
-import concurrency.DropImpl;
-import concurrency.FileStorage;
-import concurrency.FileStorageImpl;
-import concurrency.ProducerImpl;
+import concurrency.producer.ProducerImpl;
+import concurrency.quequestorages.Drop;
+import concurrency.quequestorages.DropImpl;
+import concurrency.quequestorages.FileStorage;
+import concurrency.quequestorages.FileStorageImpl;
 
 public class App {
 

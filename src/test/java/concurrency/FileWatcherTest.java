@@ -17,6 +17,8 @@ import mapper.MapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 
+import concurrency.quequestorages.FileStorage;
+import concurrency.quequestorages.FileStorageImpl;
 import app.ServiceException;
 
 public class FileWatcherTest {

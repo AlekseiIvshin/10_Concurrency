@@ -19,20 +19,24 @@ import com.sun.beans.util.Cache.Kind;
 import common.FileProvider;
 import common.FileProviderImpl;
 import sun.util.logging.resources.logging;
+import xml.FactoryException;
 import xml.JAXBBuilder;
 import xml.JAXBParser;
 import xml.XmlException;
 import xml.XmlParser;
+import xml.provider.JAXBProviderFactory;
+import xml.provider.XmlProvider;
+import xml.provider.XmlProviderFactory;
 import mapper.Mapper;
 import concurrency.Consumer;
-import concurrency.Drop;
-import concurrency.FileStorage;
-import concurrency.FileStorageImpl;
 import concurrency.FileWatcher;
-import concurrency.Producer;
-import concurrency.ProducerFactory;
-import concurrency.ProducerFactoryImpl;
-import concurrency.ProducerImpl;
+import concurrency.producer.Producer;
+import concurrency.producer.ProducerFactory;
+import concurrency.producer.ProducerFactoryImpl;
+import concurrency.producer.ProducerImpl;
+import concurrency.quequestorages.Drop;
+import concurrency.quequestorages.FileStorage;
+import concurrency.quequestorages.FileStorageImpl;
 import dao.PaymentDAOImpl;
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -87,8 +91,12 @@ public class AppService {
 				throw new Exception(
 						" producers and consumers count must be greater then 0");
 			}
-			ProducerFactory prodFactory = initProducerFactory();
-			if(prodFactory == null){
+			ProducerFactory prodFactory = null;
+			try {
+				prodFactory = initProducerFactory();
+			} catch (FactoryException e) {
+				logger.error("Factory can't create producer", e);
+				logger.info("Service stopped");
 				return;
 			}
 			executorService.execute(new FileWatcher(new File(
@@ -112,20 +120,13 @@ public class AppService {
 		executorService.shutdown();
 	}
 
-	private ProducerFactory initProducerFactory() {
+	private ProducerFactory initProducerFactory() throws FactoryException {
 		ProducerFactory prodFactory = new ProducerFactoryImpl();
-		XmlParser parser;
-		try {
-			parser = new JAXBBuilder().build();
-		} catch (XmlException e) {
-			logger.error(
-					"Can not create producer factory: xml parser builder error",
-					e);
-			return null;
-		}
+		XmlProviderFactory factory = new JAXBProviderFactory();
+		XmlProvider provider = factory.createProvider();
 		return prodFactory.addDropStorage(drop).addFileProvider(fileProvider)
 				.addFileQuequeStorage(fileStorage).addMapper(mapper)
-				.addXmlParser(parser);
+				.addXmlProvider(provider);
 
 	}
 }

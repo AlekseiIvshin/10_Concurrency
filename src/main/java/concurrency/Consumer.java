@@ -5,6 +5,7 @@ import javax.persistence.EntityExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import concurrency.quequestorages.Drop;
 import dao.PaymentDAO;
 import dao.entities.PaymentEntity;
 import domain.PaymentDomain;

@@ -15,6 +15,8 @@ import java.nio.file.WatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import concurrency.quequestorages.FileStorage;
+
 public class FileWatcher implements Runnable {
 
 	final static Logger logger = LoggerFactory.getLogger(FileWatcher.class);

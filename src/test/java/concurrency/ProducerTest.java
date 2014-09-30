@@ -13,10 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import common.FileProviderImpl;
-
-import concurrency.Drop;
-import concurrency.DropImpl;
-import concurrency.ProducerImpl;
+import concurrency.producer.ProducerImpl;
+import concurrency.quequestorages.Drop;
+import concurrency.quequestorages.DropImpl;
 
 public class ProducerTest {
 

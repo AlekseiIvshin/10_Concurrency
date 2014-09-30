@@ -1,4 +1,4 @@
-package concurrency;
+package concurrency.quequestorages;
 
 import java.io.File;
 
