@@ -19,12 +19,11 @@ public class PaymentDAOImplTest {
 	@Before
 	public void setUp(){
 		
-		payment = new PaymentEntityImpl();
+		payment = new PaymentEntity();
 		BankEnity bank = new BankEnity();
 		bank.setBIC("123123");
 		bank.setName("Some name");
-		PaymentMemberImpl payer = new PaymentMemberImpl();
-		payer.setId(1);
+		PaymentMember payer = new PaymentMember();
 		payer.setAccount("10000000000000000000");
 		payer.setAddress("adadsa");
 		Document payerDoc = new Document();
@@ -33,19 +32,18 @@ public class PaymentDAOImplTest {
 		payerDoc.setSeries("0990");
 		payer.setDocument(payerDoc);
 
-		PaymentMemberImpl payee = new PaymentMemberImpl();
-		payee.setId(2);
-		payer.setAccount("10000000000000000002");
-		payer.setAddress("adadsa");
+		PaymentMember payee = new PaymentMember();
+		payee.setAccount("10000000000000000001");
+		payee.setAddress("adadsa");
 		Document payeeDoc = new Document();
-		payerDoc.setType("passport");
-		payerDoc.setNumber("995595");
-		payerDoc.setSeries("0990");
-		payer.setDocument(payeeDoc);
+		payeeDoc.setType("passport");
+		payeeDoc.setNumber("995595");
+		payeeDoc.setSeries("0990");
+		payee.setDocument(payeeDoc);
 		
 		payment.setBank(bank);
-		payment.setPayee(payer);
-		payment.setPayer(payee);
+		payment.setPayee(payee);
+		payment.setPayer(payer);
 		payment.setCash(new BigDecimal(1000));
 		payment.setDateOfCreate(new Date());
 		payment.setDateOfExecute(new Date());

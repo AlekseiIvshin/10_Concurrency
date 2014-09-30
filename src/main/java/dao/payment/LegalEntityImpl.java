@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "paymentparticipant")
-public class LegalEntityImpl implements PaymentMember {
+public class LegalEntityImpl /*implements PaymentMember */{
 
 	@Id
 	@Column(name = "account")
@@ -66,34 +66,34 @@ public class LegalEntityImpl implements PaymentMember {
 		this.address = address;
 	}
 
-	@Override
-	public String getSurname() {
-		return null;
-	}
-
-	@Override
-	public void setSurname(String surname) {
-
-	}
-
-	@Override
-	public String getName() {
-		return null;
-	}
-
-	@Override
-	public void setName(String name) {
-
-	}
-
-	@Override
-	public String getPatronymic() {
-		return null;
-	}
-
-	@Override
-	public void setPatronymic(String patronymic) {
-
-	}
+//	@Override
+//	public String getSurname() {
+//		return null;
+//	}
+//
+//	@Override
+//	public void setSurname(String surname) {
+//
+//	}
+//
+//	@Override
+//	public String getName() {
+//		return null;
+//	}
+//
+//	@Override
+//	public void setName(String name) {
+//
+//	}
+//
+//	@Override
+//	public String getPatronymic() {
+//		return null;
+//	}
+//
+//	@Override
+//	public void setPatronymic(String patronymic) {
+//
+//	}
 
 }

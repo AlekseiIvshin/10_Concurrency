@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import dao.payment.PaymentDAO;
 import dao.payment.PaymentEntity;
-import dao.payment.PaymentEntityImpl;
+import dao.payment.PaymentEntity;
 import domain.PaymentDomain;
 import mapper.Mapper;
 
@@ -65,7 +65,7 @@ public class Consumer implements Runnable {
 		// TODO ??? single resposonility ???
 		// TODO ??? Use interface in mapper ???
 		PaymentEntity payment = mapper.map(paymentDomain,
-				PaymentEntityImpl.class);
+				PaymentEntity.class);
 		// TODO ??? single resposonility ???
 		if(!dao.add(payment)){
 			throw new EntityExistsException("Enitiy already exists");

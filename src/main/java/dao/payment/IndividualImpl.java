@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "paymentparticipant")
-public class IndividualImpl implements PaymentMember {
+public class IndividualImpl /*implements PaymentMember */ {
 	@Id
 	@Column(name = "account")
 	private String account;
@@ -87,13 +87,13 @@ public class IndividualImpl implements PaymentMember {
 		this.address = address;
 	}
 
-	@Override
-	public String getOrganizationName() {
-		return null;
-	}
-
-	@Override
-	public void setOrganizationName(String organizationName) {
-	}
+//	@Override
+//	public String getOrganizationName() {
+//		return null;
+//	}
+//
+//	@Override
+//	public void setOrganizationName(String organizationName) {
+//	}
 
 }

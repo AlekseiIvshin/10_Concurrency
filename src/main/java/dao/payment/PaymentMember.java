@@ -1,35 +1,133 @@
 package dao.payment;
 
-public interface PaymentMember{
-	public String getAccount();
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name = "paymentparticipant")
+public class PaymentMember implements PaymentMemberInterface{
 
-	public void setAccount(String account);
+	@Id 
+	@Column(name = "id")
+	private int id;
+	
+    @Column(name = "account", columnDefinition = "VARCHAR(20)", length = 20, updatable = false, nullable = false, insertable = false,unique=true)
+	private String account;
 
-	public String getSurname();
+	@Column(name = "surname")
+	private String surname;
 
-	public void setSurname(String surname);
+	@Column(name = "name")
+	private String name;
 
-	public String getName();
+	@Column(name = "patronymic")
+	private String patronymic;
+	
+	@Column(name = "organization_name")
+	private String organizationName;
 
-	public void setName(String name);
+	@Embedded
+	private Document document;
 
-	public String getPatronymic();
+	@Column(name = "phone")
+	private String phone;
 
-	public void setPatronymic(String patronymic);
+	@Column(name = "address")
+	private String address;
 
-	public Document getDocument();
 
-	public void setDocument(Document document);
+	@Override
+	public int hashCode() {
+		return account.hashCode();
+	}
 
-	public String getPhone();
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof PaymentMember)) {
+			return false;
+		}
+		PaymentMember other = (PaymentMember) obj;
+		return getAccount().equals(other.getAccount());
+	}
+	
+	public String getAccount() {
+		return account;
+	}
 
-	public void setPhone(String phone);
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
-	public String getAddress();
+	public String getSurname() {
+		return surname;
+	}
 
-	public void setAddress(String address);
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
 
-	public String getOrganizationName();
+	public String getName() {
+		return name;
+	}
 
-	public void setOrganizationName(String organizationName);
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPatronymic() {
+		return patronymic;
+	}
+
+	public void setPatronymic(String patronymic) {
+		this.patronymic = patronymic;
+	}
+
+	public String getOrganizationName() {
+		return organizationName;
+	}
+
+	public void setOrganizationName(String organizationName) {
+		this.organizationName = organizationName;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 }

@@ -19,6 +19,15 @@ public class PaymentDAOImpl implements PaymentDAO {
 		EntityManager entityManager = emf.createEntityManager();
 		try{
 			entityManager.getTransaction().begin();
+			MembersDAO members = new MembersDAOImpl();
+			PaymentMember payer = members.findByAccount(payment.getPayer().getAccount());
+			PaymentMember payee = members.findByAccount(payment.getPayee().getAccount());
+			if(payer==null || payee==null){
+				entityManager.getTransaction().rollback();
+				return false;
+			}
+			payment.setPayee(payee);
+			payment.setPayer(payer);
 			entityManager.persist(payment);
 			entityManager.getTransaction().commit();
 			return true;
