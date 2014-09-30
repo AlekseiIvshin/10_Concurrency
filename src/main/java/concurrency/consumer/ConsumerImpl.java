@@ -1,4 +1,4 @@
-package concurrency;
+package concurrency.consumer;
 
 import javax.persistence.EntityExistsException;
 
@@ -11,23 +11,38 @@ import dao.entities.PaymentEntity;
 import domain.PaymentDomain;
 import mapper.Mapper;
 
-public class Consumer implements Runnable {
+public class ConsumerImpl implements Consumer {
 
-	final static Logger logger = LoggerFactory.getLogger(Consumer.class);
-	
+	final static Logger logger = LoggerFactory.getLogger(ConsumerImpl.class);
+
 	private final Drop drop;
 	private final Mapper mapper;
 	private final PaymentDAO dao;
 	private final static int waitFileTimeout = 1000;
 
 	private Object getLock = new Object();
-	private Object persistEnity = new Object();
+	//private Object persistEnity = new Object();
 
-	public Consumer(Drop drop, Mapper mapper, PaymentDAO dao) {
+	public ConsumerImpl(Drop drop, Mapper mapper, PaymentDAO dao) {
 		this.drop = drop;
 		this.mapper = mapper;
 		this.dao = dao;
 		logger.info("Consumer created");
+	}
+
+	@Override
+	public void run() {
+		while (!Thread.interrupted()) {
+			PaymentDomain domainPayment = getPaymentFromDrop();
+			logger.info("Get payment from drop");
+			if (domainPayment != null) {
+				try {
+					setPaymentToDataBase(map(domainPayment));
+				} catch (EntityExistsException e) {
+					logger.info("DB info", e);
+				}
+			}
+		}
 	}
 
 	public PaymentDomain getPaymentFromDrop() {
@@ -44,30 +59,15 @@ public class Consumer implements Runnable {
 
 		return domainPayment;
 	}
-
-	@Override
-	public void run() {
-		while (!Thread.interrupted()) {
-			PaymentDomain domainPayment = getPaymentFromDrop();
-			logger.info("Get payment from drop");
-			if (domainPayment != null) {
-				try{
-					setPaymentToDataBase(domainPayment);
-				} catch(EntityExistsException e){
-					logger.info("DB info", e);
-				}
-			}
-		}
+	
+	private PaymentEntity map(PaymentDomain payment){
+		return mapper.map(payment, PaymentEntity.class);
 	}
 
-	private void setPaymentToDataBase(PaymentDomain paymentDomain) {
+	private void setPaymentToDataBase(PaymentEntity paymentEntity) {
 
 		// TODO ??? single resposonility ???
-		// TODO ??? Use interface in mapper ???
-		PaymentEntity payment = mapper.map(paymentDomain,
-				PaymentEntity.class);
-		// TODO ??? single resposonility ???
-		if(!dao.add(payment)){
+		if (!dao.add(paymentEntity)) {
 			throw new EntityExistsException("Enitiy already exists");
 		}
 	}

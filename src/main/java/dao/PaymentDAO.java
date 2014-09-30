@@ -1,7 +1,5 @@
 package dao;
 
-import java.util.List;
-
 import dao.entities.PaymentEntity;
 
 public interface PaymentDAO {

@@ -2,47 +2,38 @@ package app;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.hibernate.persister.internal.PersisterFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.beans.util.Cache.Kind;
-
 import common.FileProvider;
 import common.FileProviderImpl;
-import sun.util.logging.resources.logging;
 import xml.FactoryException;
-import xml.JAXBBuilder;
-import xml.JAXBParser;
-import xml.XmlException;
-import xml.XmlParser;
 import xml.provider.JAXBProviderFactory;
 import xml.provider.XmlProvider;
 import xml.provider.XmlProviderFactory;
 import mapper.Mapper;
-import concurrency.Consumer;
 import concurrency.FileWatcher;
+import concurrency.consumer.ConsumerFactory;
+import concurrency.consumer.ConsumerFactoryImpl;
+import concurrency.consumer.ConsumerImpl;
 import concurrency.producer.Producer;
 import concurrency.producer.ProducerFactory;
 import concurrency.producer.ProducerFactoryImpl;
-import concurrency.producer.ProducerImpl;
 import concurrency.quequestorages.Drop;
 import concurrency.quequestorages.FileStorage;
-import concurrency.quequestorages.FileStorageImpl;
+import dao.PaymentDAO;
 import dao.PaymentDAOImpl;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class AppService {
 
-	final static Logger logger = LoggerFactory.getLogger(Consumer.class);
+	final static Logger logger = LoggerFactory.getLogger(ConsumerImpl.class);
 
 	private final Mapper mapper;
 	private final ExecutorService executorService;
@@ -99,16 +90,17 @@ public class AppService {
 				logger.info("Service stopped");
 				return;
 			}
+			ConsumerFactory consumerFactory = initConsumerFactory();
+			
 			executorService.execute(new FileWatcher(new File(
 					"src\\test\\resources"), fileStorage));
+			
 			for (int i = 0; i < countOfProducers; i++) {
-				Producer prod = prodFactory.createProducer();
-				executorService.execute(prod);
+				executorService.execute(prodFactory.createProducer());
 			}
 
 			for (int i = 0; i < countOfConsumers; i++) {
-				executorService.execute(new Consumer(drop, mapper,
-						new PaymentDAOImpl()));
+				executorService.execute(consumerFactory.createConsumer());
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -129,4 +121,11 @@ public class AppService {
 				.addXmlProvider(provider);
 
 	}
+	
+	private ConsumerFactory initConsumerFactory(){
+		ConsumerFactory consumerFactory = new ConsumerFactoryImpl();
+		PaymentDAO dao = new PaymentDAOImpl();
+		return consumerFactory.addDropStorage(drop).addMapper(mapper).addPaymentDAO(dao);
+	}
+
 }

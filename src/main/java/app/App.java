@@ -2,17 +2,13 @@ package app;
 
 import java.io.File;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
+import mapper.Mapper;
+import mapper.MapperImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xml.JAXBParser;
-import mapper.Mapper;
-import mapper.MapperImpl;
-import concurrency.Consumer;
-import concurrency.producer.ProducerImpl;
 import concurrency.quequestorages.Drop;
 import concurrency.quequestorages.DropImpl;
 import concurrency.quequestorages.FileStorage;

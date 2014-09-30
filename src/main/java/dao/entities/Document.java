@@ -1,13 +1,11 @@
 package dao.entities;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 
 @Embeddable
-public class Document  implements Serializable{
+public class Document {
 	@Column(name = "document_series")
 	private String series;
 	@Column(name = "document_number")
