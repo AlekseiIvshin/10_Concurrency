@@ -1,4 +1,4 @@
-package dao.payment;
+package dao.entities;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -10,12 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 @Entity
 @Table(name = "paymentparticipant")
-public class PaymentMember implements PaymentMemberInterface{
+public class PaymentMember{
 
-	@Id 
-	@Column(name = "id")
-	private int id;
-	
+	@Id
     @Column(name = "account", columnDefinition = "VARCHAR(20)", length = 20, updatable = false, nullable = false, insertable = false,unique=true)
 	private String account;
 
@@ -123,11 +120,4 @@ public class PaymentMember implements PaymentMemberInterface{
 		this.address = address;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 }

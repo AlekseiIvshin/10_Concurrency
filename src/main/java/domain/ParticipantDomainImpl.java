@@ -7,7 +7,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Id;
 
 import common.ParticipantType;
-import dao.payment.Document;
+import dao.entities.Document;
 
 public class ParticipantDomainImpl implements ParticipantDomain {
 	

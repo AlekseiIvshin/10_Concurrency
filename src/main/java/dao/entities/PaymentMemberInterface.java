@@ -1,4 +1,4 @@
-package dao.payment;
+package dao.entities;
 
 public interface PaymentMemberInterface {
 	public String getAccount();

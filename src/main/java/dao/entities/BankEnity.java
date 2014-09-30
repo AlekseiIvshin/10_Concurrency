@@ -1,4 +1,4 @@
-package dao.payment;
+package dao.entities;
 
 import java.io.Serializable;
 

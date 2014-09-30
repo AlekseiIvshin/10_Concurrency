@@ -12,6 +12,11 @@ import javax.persistence.Persistence;
 import org.junit.Before;
 import org.junit.Test;
 
+import dao.entities.BankEnity;
+import dao.entities.Document;
+import dao.entities.PaymentEntity;
+import dao.entities.PaymentMember;
+
 public class PaymentDAOImplTest {
 
 	private PaymentEntity payment ;

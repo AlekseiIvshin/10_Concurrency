@@ -10,8 +10,7 @@ create table participant_types(
 
 
 create table paymentparticipant(
-	id int(9) AUTO_INCREMENT primary key,
-	account varchar(20) unique key,
+	account varchar(20) primary key,
 	surname varchar(255),
 	name varchar(255),
 	patronymic varchar(255),
@@ -27,16 +26,16 @@ create table paymentparticipant(
 
 create table payments(
 	id int(11) AUTO_INCREMENT primary key,
-	payer_account int(9),
-	payee_account int(9),
+	payer_account varchar(20),
+	payee_account varchar(20),
 	bank_bic varchar(15) not null,
 	bank_name varchar(255) not null,
 	cash decimal not null,
 	date_of_create datetime not null,
 	date_of_execute datetime not null,
 	unique key (payer_account, payee_account, date_of_create,bank_bic),
-	foreign key (payer_account) references paymentparticipant(id),
-	foreign key (payee_account) references paymentparticipant(id)	
+	foreign key (payer_account) references paymentparticipant(account),
+	foreign key (payee_account) references paymentparticipant(account)	
 );
 
 

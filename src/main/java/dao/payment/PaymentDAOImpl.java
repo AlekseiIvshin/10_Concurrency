@@ -5,6 +5,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import dao.entities.PaymentEntity;
+import dao.entities.PaymentMember;
+
 public class PaymentDAOImpl implements PaymentDAO {
 
 	EntityManagerFactory emf;
