@@ -5,10 +5,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mapper.Mapper;
-import mapper.MapperImpl;
 import concurrency.Consumer;
 import concurrency.Drop;
-import concurrency.DropImpl;
 import concurrency.Producer;
 import dao.PaymentDAOImpl;
 
@@ -16,7 +14,6 @@ public class AppService {
 	private final Mapper mapper;
 	private final ExecutorService executorService;
 	private final Drop drop;
-	private File readedDirectory;
 	
 	public AppService(Drop drop, Mapper mapper){
 		executorService = Executors.newCachedThreadPool();

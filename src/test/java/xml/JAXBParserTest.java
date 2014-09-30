@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -36,7 +37,11 @@ public class JAXBParserTest {
 			System.err.println("Error in schema init");
 			return;
 		}
-		parser = new JAXBParser(schema);
+		try {
+			parser = new JAXBParser(schema);
+		} catch (JAXBException e) {
+			fail("Parser createion error: " +e.getMessage());
+		}
 	}
 
 	@Test

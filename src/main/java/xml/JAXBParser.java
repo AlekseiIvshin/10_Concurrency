@@ -11,21 +11,24 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 
-import xml.elements.PaymentXml;
-import xml.elements.PaymentsXml;
-import xml.elements.PaymentsXml;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import xml.elements.PaymentXml;
+import xml.elements.PaymentsXml;
 
 public class JAXBParser implements XmlParser {
 
 	final static Logger logger = LoggerFactory.getLogger(JAXBParser.class);
 
 	Schema schema;
+	Unmarshaller unmarshaller;
 
-	public JAXBParser(Schema schema) {
+	public JAXBParser(Schema schema) throws JAXBException {
 		this.schema = schema;
+		unmarshaller = JAXBContext.newInstance(
+				PaymentsXml.class).createUnmarshaller();
+		unmarshaller.setSchema(schema);
 	}
 
 	public List<PaymentXml> parse(String xmlLocation)
@@ -38,13 +41,9 @@ public class JAXBParser implements XmlParser {
 	public List<PaymentXml> parse(File xmlLocation)
 			throws FileNotFoundException, XmlException {
 
-		List<PaymentXml> payments = new ArrayList<PaymentXml>();
 		PaymentsXml paymentsRoot = null;
 		try {
-			Unmarshaller unmarsheller = JAXBContext.newInstance(
-					PaymentsXml.class).createUnmarshaller();
-			unmarsheller.setSchema(schema);
-			paymentsRoot = (PaymentsXml) unmarsheller
+			paymentsRoot = (PaymentsXml) unmarshaller
 					.unmarshal(new FileInputStream(xmlLocation));
 		} catch (FileNotFoundException e) {
 			logger.error(
@@ -57,9 +56,9 @@ public class JAXBParser implements XmlParser {
 		}
 
 		if (paymentsRoot != null) {
-			payments = paymentsRoot.getPayments();
+			return paymentsRoot.getPayments();
 		}
-		return payments;
+		return null;
 
 	}
 

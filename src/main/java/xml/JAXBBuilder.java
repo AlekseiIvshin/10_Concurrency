@@ -3,6 +3,7 @@ package xml;
 import java.io.File;
 import java.io.IOException;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -16,7 +17,7 @@ public class JAXBBuilder implements ParserBuilder {
 	public XmlParser build() throws XmlException {
 		try {
 			return new JAXBParser(initSchema());
-		} catch (XmlException e) {
+		} catch (XmlException | JAXBException e) {
 			throw new XmlException("Can't create parser:"+e.getMessage());
 		}
 	}
