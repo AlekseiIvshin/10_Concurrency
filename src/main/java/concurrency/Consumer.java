@@ -5,9 +5,8 @@ import javax.persistence.EntityExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dao.entities.PaymentEntity;
 import dao.payment.PaymentDAO;
-import dao.payment.PaymentEntity;
-import dao.payment.PaymentEntity;
 import domain.PaymentDomain;
 import mapper.Mapper;
 

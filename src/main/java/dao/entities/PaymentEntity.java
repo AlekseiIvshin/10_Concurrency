@@ -1,4 +1,4 @@
-package dao.payment;
+package dao.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;
