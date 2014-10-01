@@ -21,7 +21,7 @@ public class FileProviderImpl implements FileProvider {
 	
 	@Override
 	public File copyToTempFile(File sourceFile, boolean deleteSoruceFile) {
-		if(sourceFile == null){
+		if(sourceFile == null || !sourceFile.exists()){
 			return null;
 		}
 		File dest = null;

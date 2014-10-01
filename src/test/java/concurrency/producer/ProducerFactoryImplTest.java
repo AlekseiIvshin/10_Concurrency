@@ -14,12 +14,10 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 
 import xml.provider.XmlProvider;
-
 import common.FactoryException;
 import common.FileProvider;
-
-import concurrency.quequestorages.Drop;
-import concurrency.quequestorages.FileStorage;
+import concurrency.quequestorages.drop.Drop;
+import concurrency.quequestorages.files.FileStorage;
 
 @RunWith(JUnit4.class)
 public class ProducerFactoryImplTest {

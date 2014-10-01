@@ -10,14 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import common.FactoryException;
-
 import appservice.AppService;
 import appservice.ServiceException;
 import appservice.ServiceFactoryImpl;
-import concurrency.quequestorages.Drop;
-import concurrency.quequestorages.DropImpl;
-import concurrency.quequestorages.FileStorage;
-import concurrency.quequestorages.FileStorageImpl;
+import concurrency.quequestorages.drop.Drop;
+import concurrency.quequestorages.drop.DropImpl;
+import concurrency.quequestorages.files.FileStorage;
+import concurrency.quequestorages.files.FileStorageImpl;
 
 public class App {
 

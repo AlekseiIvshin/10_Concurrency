@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mapper.Mapper;
+import mapper.MapperImpl;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -20,35 +21,42 @@ import org.mockito.Mockito;
 import org.mockito.verification.VerificationMode;
 
 import xml.elements.PaymentXml;
+import xml.provider.JAXBProviderFactory;
 import xml.provider.XmlProvider;
+import xml.provider.XmlProviderFactory;
 import common.FactoryException;
 import common.FileProvider;
+import common.FileProviderImpl;
 import common.XmlException;
-import concurrency.quequestorages.Drop;
-import concurrency.quequestorages.FileStorage;
+import concurrency.quequestorages.drop.Drop;
+import concurrency.quequestorages.drop.DropImpl;
+import concurrency.quequestorages.drop.DropSetter;
+import concurrency.quequestorages.files.FileStorage;
+import concurrency.quequestorages.files.FileStorageImpl;
 import domain.PaymentDomain;
 import static org.mockito.Mockito.*;
 
 public class ProducerImplTest {
 	ExecutorService executorService;
-	ProducerImpl producer;
+	ProducerImpl producerWithMocks;
+	Producer producer;
 	ProducerFactoryImpl factory;
 	@Mock
-	Drop drop = mock(Drop.class);
+	DropSetter dropMock = mock(Drop.class);
 	@Mock
-	Mapper mapper = mock(Mapper.class);
+	Mapper mapperMock = mock(Mapper.class);
 	@Mock
-	FileStorage fileStorage = mock(FileStorage.class);
+	FileStorage fileStorageMock = mock(FileStorage.class);
 	@Mock
-	XmlProvider xmlProvider = mock(XmlProvider.class);
+	XmlProvider xmlProviderMock = mock(XmlProvider.class);
 	@Mock
-	FileProvider fileProvider = mock(FileProvider.class);
+	FileProvider fileProviderMock = mock(FileProvider.class);
 	@Mock
-	PaymentXml paymentXml = mock(PaymentXml.class);
+	PaymentXml paymentXmlMock = mock(PaymentXml.class);
 	@Mock
-	PaymentDomain paymentDomain = mock(PaymentDomain.class);
+	PaymentDomain paymentDomainMock = mock(PaymentDomain.class);
 	@Mock
-	File xmlFile = mock(File.class);
+	File xmlFileMock = mock(File.class);
 	
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -57,12 +65,12 @@ public class ProducerImplTest {
 	public void setUp(){
 		executorService = Executors.newCachedThreadPool();
 		factory = new ProducerFactoryImpl();
-		assertNotNull(factory.setDropStorage(drop));
-		assertNotNull(factory.setMapper(mapper));
-		assertNotNull(factory.setFileQuequeStorage(fileStorage));
-		assertNotNull(factory.setXmlProvider(xmlProvider));
-		assertNotNull(factory.setFileProvider(fileProvider));
-		producer = new ProducerImpl(drop, mapper, fileProvider, xmlProvider, fileStorage);
+		assertNotNull(factory.setDropStorage(dropMock));
+		assertNotNull(factory.setMapper(mapperMock));
+		assertNotNull(factory.setFileQuequeStorage(fileStorageMock));
+		assertNotNull(factory.setXmlProvider(xmlProviderMock));
+		assertNotNull(factory.setFileProvider(fileProviderMock));
+		producerWithMocks = new ProducerImpl(dropMock, mapperMock, fileProviderMock, xmlProviderMock, fileStorageMock);
 	}
 	@Ignore
 	@Test
@@ -73,45 +81,62 @@ public class ProducerImplTest {
 	@Test
 	public void testTransferNotFoundFile() throws FileNotFoundException, XmlException{
 		exception.expect(FileNotFoundException.class);
-		doThrow(FileNotFoundException.class).when(xmlProvider).parse(xmlFile);
-		when(xmlProvider.getNextPayment()).thenReturn(null);
-		when(fileStorage.getNextFile()).thenReturn(xmlFile);
-		when(fileProvider.copyToTempFile(xmlFile,true)).thenReturn(xmlFile);
-		producer.transfer();
-		verify(xmlProvider, atLeastOnce()).getNextPayment();
-		verify(fileStorage, atLeastOnce()).getNextFile();
-		verify(fileProvider, atLeastOnce()).copyToTempFile(xmlFile,true);
+		doThrow(FileNotFoundException.class).when(xmlProviderMock).parse(xmlFileMock);
+		when(xmlProviderMock.getNextPayment()).thenReturn(null);
+		when(fileStorageMock.getNextFile()).thenReturn(xmlFileMock);
+		when(fileProviderMock.copyToTempFile(xmlFileMock,true)).thenReturn(xmlFileMock);
+		producerWithMocks.transfer();
+		verify(xmlProviderMock, atLeastOnce()).getNextPayment();
+		verify(fileStorageMock, atLeastOnce()).getNextFile();
+		verify(fileProviderMock, atLeastOnce()).copyToTempFile(xmlFileMock,true);
 	}
 	
 
 	@Test
 	public void testTransferXmlException() throws FileNotFoundException, XmlException{
 		exception.expect(XmlException.class);
-		doThrow(XmlException.class).when(xmlProvider).parse(xmlFile);
-		when(xmlProvider.getNextPayment()).thenReturn(null);
-		when(fileStorage.getNextFile()).thenReturn(xmlFile);
-		when(fileProvider.copyToTempFile(xmlFile,true)).thenReturn(xmlFile);
-		producer.transfer();
-		verify(xmlProvider, atLeastOnce()).getNextPayment();
-		verify(fileStorage, atLeastOnce()).getNextFile();
-		verify(fileProvider, atLeastOnce()).copyToTempFile(xmlFile,true);
+		doThrow(XmlException.class).when(xmlProviderMock).parse(xmlFileMock);
+		when(xmlProviderMock.getNextPayment()).thenReturn(null);
+		when(fileStorageMock.getNextFile()).thenReturn(xmlFileMock);
+		when(fileProviderMock.copyToTempFile(xmlFileMock,true)).thenReturn(xmlFileMock);
+		producerWithMocks.transfer();
+		verify(xmlProviderMock, atLeastOnce()).getNextPayment();
+		verify(fileStorageMock, atLeastOnce()).getNextFile();
+		verify(fileProviderMock, atLeastOnce()).copyToTempFile(xmlFileMock,true);
 	}
 	
 
 	@Test
-	public void testTransfer() throws FileNotFoundException, XmlException {
-		when(xmlProvider.getNextPayment())
-				.thenReturn(paymentXml)
-				.thenReturn(null);
-		when(fileStorage.getNextFile()).thenReturn(xmlFile);
-		when(fileProvider.copyToTempFile(xmlFile,true)).thenReturn(xmlFile);
-		when(mapper.map(paymentXml, PaymentDomain.class)).thenReturn(paymentDomain);
-		when(drop.setPayment(paymentDomain)).thenReturn(true);
-		doNothing().when(xmlProvider).parse(xmlFile);
-		producer.transfer();
-		verify(xmlProvider, atLeastOnce()).getNextPayment();
-		verify(fileStorage, atLeastOnce()).getNextFile();
-		verify(fileProvider, atLeastOnce()).copyToTempFile(xmlFile,true);
+	public void testTransfer(){
+		FileProvider fileProvider = new FileProviderImpl(new File("src\\test\\resources\\temp"));
+		DropSetter drop = new DropImpl(10);
+		Mapper mapper = new MapperImpl();
+		XmlProvider xmlProvider;
+		try {
+			xmlProvider = new JAXBProviderFactory().createProvider();
+		} catch (FactoryException e) {
+			fail(e.getMessage());
+			return;
+		}
+		FileStorage fileStorage = new FileStorageImpl(10);
+		fileStorage.setFile(new File("src\\test\\resources\\1.xml"));
+		fileStorage.setFile(new File("src\\test\\resources\\2.xml"));
+		fileStorage.setFile(new File("src\\test\\resources\\3.xml"));
+		fileStorage.setFile(new File("src\\test\\resources\\4.xml"));
+//		fileStorage.setFile(new File("src\\test\\resources\\5.xml"));
+//		when(fileStorageMock.getNextFile())
+//				.thenReturn(new File("src\\test\\resources\\1.xml"))
+//				.thenReturn(new File("src\\test\\resources\\2.xml"))
+//				.thenReturn(new File("src\\test\\resources\\3.xml"))
+//				.thenReturn(new File("src\\test\\resources\\4.xml"))
+//				.thenReturn(new File("src\\test\\resources\\5.xml"));
+		ProducerImpl prod = new ProducerImpl(drop,mapper, fileProvider,xmlProvider,fileStorage);
+		executorService.execute(prod);
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
 }

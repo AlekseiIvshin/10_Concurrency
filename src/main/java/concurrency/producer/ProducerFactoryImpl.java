@@ -2,13 +2,14 @@ package concurrency.producer;
 
 import common.FactoryException;
 import common.FileProvider;
-import concurrency.quequestorages.Drop;
-import concurrency.quequestorages.FileStorageReadOnly;
+import concurrency.quequestorages.drop.Drop;
+import concurrency.quequestorages.drop.DropSetter;
+import concurrency.quequestorages.files.FileStorageReadOnly;
 import mapper.Mapper;
 import xml.provider.XmlProvider;
 
 public class ProducerFactoryImpl implements ProducerFactory {
-	private Drop drop;
+	private DropSetter drop;
 	private Mapper mapper;
 	private XmlProvider parser;
 	private FileStorageReadOnly fileStorage;
@@ -16,7 +17,7 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	
 	
 	@Override
-	public ProducerFactory setDropStorage(Drop drop) {
+	public ProducerFactory setDropStorage(DropSetter drop) {
 		this.drop = drop;
 		return this;
 	}

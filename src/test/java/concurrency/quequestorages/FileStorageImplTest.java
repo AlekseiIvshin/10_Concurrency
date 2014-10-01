@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import concurrency.quequestorages.files.FileStorageImpl;
+
 public class FileStorageImplTest {
 
 	FileStorageImpl files;
@@ -35,6 +37,25 @@ public class FileStorageImplTest {
 		assertNotNull("Expected not null payment",gettedFile);
 		assertEquals(f, gettedFile);
 		assertNull(files.getNextFile());
+	}
+	
+	@Test
+	public void testSetterAndGetter(){
+
+		File f1 = new File("src\\test\\resources\\1.xml");
+		File f2 = new File("src\\test\\resources\\2.xml");
+		File f3 = new File("src\\test\\resources\\3.xml");
+		File f4 = new File("src\\test\\resources\\4.xml");
+		
+		files.setFile(f1);
+		files.setFile(f2);
+		files.setFile(f3);
+		files.setFile(f4);
+		
+		assertEquals(f1, files.getNextFile());
+		assertEquals(f2, files.getNextFile());
+		assertEquals(f3, files.getNextFile());
+		assertEquals(f4, files.getNextFile());
 	}
 
 }

@@ -15,7 +15,7 @@ import java.nio.file.WatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import concurrency.quequestorages.FileStorage;
+import concurrency.quequestorages.files.FileStorage;
 
 public class FileWatcher implements Runnable {
 
@@ -30,7 +30,7 @@ public class FileWatcher implements Runnable {
 		public boolean accept(File pathname) {
 			return pathname.getName().endsWith(".xml") && !pathname.getName().startsWith("tmp");
 		}
-	};
+	}; 
 
 	private Object storageLock = new Object();
 

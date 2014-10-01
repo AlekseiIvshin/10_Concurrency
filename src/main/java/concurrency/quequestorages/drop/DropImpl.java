@@ -1,4 +1,4 @@
-package concurrency.quequestorages;
+package concurrency.quequestorages.drop;
 
 import domain.PaymentDomain;
 
@@ -12,12 +12,10 @@ public class DropImpl implements Drop {
 		queue = new ArrayBlockingQueue<PaymentDomain>(queueSize);
 	}
 
-	@Override
 	public synchronized PaymentDomain getPayment() {
 		return queue.poll();
 	}
 
-	@Override
 	public synchronized boolean setPayment(PaymentDomain payment){
 		return queue.offer(payment);
 	}

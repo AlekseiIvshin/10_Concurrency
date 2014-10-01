@@ -11,10 +11,10 @@ import common.ConfigReader;
 import common.FactoryException;
 import common.FileProvider;
 import common.FileProviderImpl;
-import concurrency.quequestorages.Drop;
-import concurrency.quequestorages.DropImpl;
-import concurrency.quequestorages.FileStorage;
-import concurrency.quequestorages.FileStorageImpl;
+import concurrency.quequestorages.drop.Drop;
+import concurrency.quequestorages.drop.DropImpl;
+import concurrency.quequestorages.files.FileStorage;
+import concurrency.quequestorages.files.FileStorageImpl;
 
 public class ServiceFactoryImpl implements ServiceFactory {
 
@@ -68,7 +68,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		Mapper mapper = initMapper();
 		Drop drop = new DropImpl(dropQueueSize);
 		FileStorage fileStorage = new FileStorageImpl(fileQueueSize);
-		FileProvider fileProvider = 
+		FileProvider fileProvider =  
 				new FileProviderImpl(new File(destPath));
 		
 		

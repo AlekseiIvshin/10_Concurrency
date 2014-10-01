@@ -5,7 +5,7 @@ import javax.persistence.EntityExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import concurrency.quequestorages.Drop;
+import concurrency.quequestorages.drop.DropGetter;
 import dao.PaymentDAO;
 import dao.entities.PaymentEntity;
 import domain.PaymentDomain;
@@ -15,7 +15,7 @@ public class ConsumerImpl implements Consumer {
 
 	final static Logger logger = LoggerFactory.getLogger(ConsumerImpl.class);
 
-	private final Drop drop;
+	private final DropGetter drop;
 	private final Mapper mapper;
 	private final PaymentDAO dao;
 	private final static int waitFileTimeout = 1000;
@@ -23,7 +23,7 @@ public class ConsumerImpl implements Consumer {
 	private Object getLock = new Object();
 	//private Object persistEnity = new Object();
 
-	public ConsumerImpl(Drop drop, Mapper mapper, PaymentDAO dao) {
+	public ConsumerImpl(DropGetter drop, Mapper mapper, PaymentDAO dao) {
 		this.drop = drop;
 		this.mapper = mapper;
 		this.dao = dao;

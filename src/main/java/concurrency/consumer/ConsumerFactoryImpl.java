@@ -1,18 +1,18 @@
 package concurrency.consumer;
 
-import concurrency.quequestorages.Drop;
-import dao.PaymentDAO;
 import mapper.Mapper;
+import concurrency.quequestorages.drop.DropGetter;
+import dao.PaymentDAO;
 
 public class ConsumerFactoryImpl implements ConsumerFactory {
 
-	private Drop drop;
+	private DropGetter drop;
 	private Mapper mapper;
 	private PaymentDAO dao;
 	
 	
 	@Override
-	public ConsumerFactory addDropStorage(Drop drop) {
+	public ConsumerFactory addDropStorage(DropGetter drop) {
 		this.drop = drop;
 		return this;
 	}

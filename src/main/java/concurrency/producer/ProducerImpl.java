@@ -10,12 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import xml.elements.PaymentXml;
 import xml.provider.XmlProvider;
-
 import common.FileProvider;
 import common.XmlException;
-
-import concurrency.quequestorages.Drop;
-import concurrency.quequestorages.FileStorageReadOnly;
+import concurrency.quequestorages.drop.Drop;
+import concurrency.quequestorages.drop.DropSetter;
+import concurrency.quequestorages.files.FileStorageReadOnly;
 import domain.PaymentDomain;
 import domain.PaymentDomainImpl;
 
@@ -23,7 +22,7 @@ public class ProducerImpl implements Producer {
 
 	final static Logger logger = LoggerFactory.getLogger(ProducerImpl.class);
 
-	private final Drop drop;
+	private final DropSetter drop;
 	private final Mapper mapper;
 	private final XmlProvider xmlProvider;
 	private final FileStorageReadOnly fileStorage;
@@ -35,7 +34,7 @@ public class ProducerImpl implements Producer {
 
 	private int errors;
 
-	public ProducerImpl(Drop drop, Mapper mapper, FileProvider fileProvider,
+	public ProducerImpl(DropSetter drop, Mapper mapper, FileProvider fileProvider,
 			XmlProvider xmlProvider, FileStorageReadOnly fileStorage)
 			throws NullPointerException {
 		if (drop == null || mapper == null || fileProvider == null
@@ -45,6 +44,7 @@ public class ProducerImpl implements Producer {
 					+ (fileProvider == null ? "FileProvider, " : "")
 					+ (fileStorage == null ? "FileStorage, " : "")
 					+ (xmlProvider == null ? "XmlProvider" : "");
+			logger.error("Must be not null: {}", errorComponents);
 			throw new NullPointerException("Must be not null: "
 					+ errorComponents);
 		}
@@ -77,6 +77,8 @@ public class ProducerImpl implements Producer {
 	public void transfer() throws FileNotFoundException, XmlException {
 		// Get temp copy of file from readed directory
 		File fileFromQueque = getNextFileFromStorage();
+		if(fileFromQueque == null){
+			return;}
 		File tmpFile = getNextTmpFileAndDeleteReal(fileFromQueque);
 
 		xmlProvider.parse(tmpFile);
@@ -99,7 +101,8 @@ public class ProducerImpl implements Producer {
 				try {
 					fileStorageLock.wait();
 				} catch (InterruptedException e) {
-					// TODO: 
+					// TODO ???
+					return null;
 				}
 			}
 			fileStorageLock.notifyAll();

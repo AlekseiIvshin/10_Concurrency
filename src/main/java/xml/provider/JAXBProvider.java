@@ -38,6 +38,9 @@ public class JAXBProvider implements XmlProvider{
 	@Override
 	public void parse(File xml) throws FileNotFoundException, XmlException {
 		data.clear();
+		if(xml==null || !xml.exists()){
+			return;
+		}
 		PaymentsXml paymentsRoot = null;
 		try {
 			paymentsRoot = (PaymentsXml) unmarshaller
