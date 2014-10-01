@@ -1,11 +1,11 @@
 package common;
 
 import java.io.File;
+import java.io.IOException;
 
 public interface FileProvider {
 
-	File copyToTempFile(File sourceFile,boolean deleteSoruceFile);
-	File getTempDestination();
+	File prepareFile(File sourceFile) throws IOException;
 	void close();
 	void close(File f);
 }

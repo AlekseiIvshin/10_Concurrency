@@ -23,29 +23,40 @@ public class ConsumerImpl implements Consumer {
 	private Object getLock = new Object();
 	//private Object persistEnity = new Object();
 
-	public ConsumerImpl(DropGetter drop, Mapper mapper, PaymentDAO dao) {
+	public ConsumerImpl(DropGetter drop, Mapper mapper, PaymentDAO dao) 
+			throws NullPointerException{
+		if (drop == null || mapper == null || dao == null) {
+			String errorComponents = (drop == null ? "Drop, " : "")
+					+ (mapper == null ? "Mapper, " : "")
+					+ (dao == null ? "PaymentDAO, " : "");
+			throw new NullPointerException("Must be not null: "
+					+ errorComponents);
+		}
 		this.drop = drop;
 		this.mapper = mapper;
 		this.dao = dao;
-		logger.info("Consumer created");
 	}
 
 	@Override
 	public void run() {
 		while (!Thread.interrupted()) {
-			PaymentDomain domainPayment = getPaymentFromDrop();
-			logger.info("Get payment from drop");
-			if (domainPayment != null) {
-				try {
-					setPaymentToDataBase(map(domainPayment));
-				} catch (EntityExistsException e) {
-					logger.info("DB info", e);
-				}
+			try{
+				transfer();
+			}catch(Exception e){
+				logger.error("Transfer error", e);
+				return;
 			}
 		}
 	}
+	
+	public void transfer(){
+		PaymentDomain domainPayment = getPaymentFromDrop();
+		if (domainPayment != null) {
+			setPaymentToDataBase(map(domainPayment));
+		}
+	}
 
-	public PaymentDomain getPaymentFromDrop() {
+	private PaymentDomain getPaymentFromDrop() {
 		PaymentDomain domainPayment = null;
 		synchronized (getLock) {
 			while ((domainPayment = drop.getPayment()) == null) {
@@ -65,10 +76,8 @@ public class ConsumerImpl implements Consumer {
 	}
 
 	private void setPaymentToDataBase(PaymentEntity paymentEntity) {
-
-		// TODO ??? single resposonility ???
-		if (!dao.add(paymentEntity)) {
-			throw new EntityExistsException("Enitiy already exists");
-		}
+		try{
+			dao.add(paymentEntity);
+		} catch(EntityExistsException e){ }
 	}
 }

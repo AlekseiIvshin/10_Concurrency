@@ -2,6 +2,7 @@ package concurrency.producer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import mapper.Mapper;
 
@@ -44,7 +45,6 @@ public class ProducerImpl implements Producer {
 					+ (fileProvider == null ? "FileProvider, " : "")
 					+ (fileStorage == null ? "FileStorage, " : "")
 					+ (xmlProvider == null ? "XmlProvider" : "");
-			logger.error("Must be not null: {}", errorComponents);
 			throw new NullPointerException("Must be not null: "
 					+ errorComponents);
 		}
@@ -76,10 +76,13 @@ public class ProducerImpl implements Producer {
 
 	public void transfer() throws FileNotFoundException, XmlException {
 		// Get temp copy of file from readed directory
-		File fileFromQueque = getNextFileFromStorage();
+		File fileFromQueque = getNextFileFromStorage(); 
 		if(fileFromQueque == null){
 			return;}
-		File tmpFile = getNextTmpFileAndDeleteReal(fileFromQueque);
+		
+		File tmpFile = getPreparedFile(fileFromQueque);
+		if(tmpFile ==null)
+			return;
 
 		xmlProvider.parse(tmpFile);
 
@@ -110,9 +113,13 @@ public class ProducerImpl implements Producer {
 		return f;
 	}
 
-	private File getNextTmpFileAndDeleteReal(File f) {
+	private File getPreparedFile(File f) {
 		synchronized (fileLock) {
-			return fileProvider.copyToTempFile(f, true);
+			try {
+				return fileProvider.prepareFile(f);
+			} catch (IOException e) {
+				return null;
+			}
 		}
 	}
 

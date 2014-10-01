@@ -11,62 +11,87 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import appservice.ServiceException;
 import concurrency.quequestorages.files.FileStorage;
 
 public class FileWatcher implements Runnable {
 
 	final static Logger logger = LoggerFactory.getLogger(FileWatcher.class);
 
-	private final File sourceDirectory;
 	private final WatchService watcher;
 	private final FileStorage fileStorage;
+	private Set<File> watchigDirectories;
 	private static final FileFilter filter = new FileFilter() {
-		
+
 		@Override
 		public boolean accept(File pathname) {
-			return pathname.getName().endsWith(".xml") && !pathname.getName().startsWith("tmp");
+			return pathname.getName().endsWith(".xml")
+					&& !pathname.getName().startsWith("tmp");
 		}
-	}; 
+	};
 
 	private Object storageLock = new Object();
 
-	public FileWatcher(File sourcePath, FileStorage storage) throws IOException{
+	public FileWatcher(FileStorage storage) throws IOException {
 		this.fileStorage = storage;
-		sourceDirectory = sourcePath;
 		watcher = FileSystems.getDefault().newWatchService();
+		watchigDirectories = new HashSet<File>();
+	}
+
+	public void initWatcher() {
+
 	}
 	
-	public void initWatcher(){
-		
-	}
-	
-	public void addDirectory(File directory) throws IOException{
-		if(!directory.isDirectory()){
-			throw new IOException(directory+" is not readable or not directory");
+	public void addDirectory(File directory) throws IOException {
+		if (!directory.isDirectory()) {
+			throw new IOException(directory
+					+ " is not readable or not directory");
+		}
+		if (watchigDirectories.contains(directory)) {
+			logger.debug("File watcher already contains {}",
+					directory.getAbsolutePath());
+			return;
 		}
 		Path dir = directory.toPath();
 		try {
 			dir.register(watcher, ENTRY_CREATE);
+			watchigDirectories.add(directory);
+			logger.info("{} now is watched", directory.getAbsolutePath());
 		} catch (IOException e) {
-			logger.error("Watch key not registred",e);
+			logger.error("Watch key not registred", e);
 			throw e;
 		}
 	}
 
 	@Override
 	public void run() {
+		if (watchigDirectories.isEmpty()) {
+			logger.info("File wathcers directory list is empty. File watcher service stopped");
+			return;
+		}
 		logger.info("File watcher start work");
-		logger.info("Set existing files on {} to file queque",sourceDirectory);
 		setExistingFilesToStorage();
-		logger.info("Start watch to {}", sourceDirectory);
 		scanDirectory();
 	}
-	
-	private void scanDirectory(){
+
+	public boolean isReady() {
+		return watchigDirectories.size() > 0;
+	}
+
+	public Set<File> getDirectories() {
+		return watchigDirectories;
+	}
+
+	private void scanDirectory() {
+		logger.info("Start watch to directories (count: {})",
+				watchigDirectories.size());
 		while (!Thread.interrupted()) {
 			WatchKey key;
 			try {
@@ -91,31 +116,40 @@ public class FileWatcher implements Runnable {
 			key.reset();
 		}
 	}
-	
-	private void setFileToQueque(File f){
+
+	private void setFileToQueque(File f) {
 		synchronized (storageLock) {
 			while (!fileStorage.setFile(f)) {
 				try {
 					storageLock.wait();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					logger.error("Thread interrupted",e);
+					logger.error("Thread interrupted", e);
 					return;
 				}
 			}
 			storageLock.notifyAll();
 		}
 	}
-	private void setExistingFilesToStorage(){
-		File[] files = sourceDirectory.listFiles(filter);
-		for(File f: files){
+
+	private void setExistingFilesToStorage() {
+		for (File watchedDir : watchigDirectories) {
+			logger.info("Set already exisiting files from {} to queque",
+					watchedDir.getAbsolutePath());
+			setExistingFiles(watchedDir);
+		}
+	}
+
+	private void setExistingFiles(File watchedDirecotry) {
+		File[] files = watchedDirecotry.listFiles(filter);
+		for (File f : files) {
 			synchronized (storageLock) {
 				while (!fileStorage.setFile(f)) {
 					try {
 						storageLock.wait();
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
-						logger.error("Thread interrupted",e);
+						logger.error("Thread interrupted", e);
 						return;
 					}
 				}

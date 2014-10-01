@@ -35,98 +35,72 @@ import static java.nio.file.StandardWatchEventKinds.*;
 public class AppServiceImpl implements AppService {
 
 	final static Logger logger = LoggerFactory.getLogger(ConsumerImpl.class);
-	
-
 
 	private final Mapper mapper;
 	private final ExecutorService executorService;
 	private final Drop drop;
 	private final FileStorage fileStorage;
-	private final WatchService watcher;
 	private final FileProvider fileProvider;
-	private Set<File> watchigDirectories;
-	
+	private FileWatcher fileWatcher;
 
-	//private final ConfigReader configReader = new ConfigReader();
-
+	// private final ConfigReader configReader = new ConfigReader();
 
 	private final int producerCount;
 	private final int consumerCount;
 
-	public AppServiceImpl(Drop drop, Mapper mapper, FileStorage storage, FileProvider fileProvider, int producerCount, int consumerCount)
-			throws IOException {
+	public AppServiceImpl(Drop drop, Mapper mapper, FileStorage storage,
+			FileProvider fileProvider, int producerCount, int consumerCount,
+			File defaultSourceDirectory) throws IOException {
 		executorService = Executors.newCachedThreadPool();
 		this.drop = drop;
 		fileStorage = storage;
 		this.mapper = mapper;
 		this.fileProvider = fileProvider;
-//				new FileProviderImpl(new File(
-//				"src\\test\\resources\\temp"));
-		watcher = FileSystems.getDefault().newWatchService();
-		
-		watchigDirectories = new HashSet<File>();
+
 		this.producerCount = producerCount;
-		this.consumerCount= consumerCount;
+		this.consumerCount = consumerCount;
+		fileWatcher = initFileWatcher(defaultSourceDirectory);
 	}
 
 	public void addWatchingDirectory(String directory) throws IOException {
-		if (watchigDirectories.contains(directory)) {
-			return;
-		}
-		File f = new File(directory);
-		if (!f.isDirectory()) {
-			throw new IOException(directory
-					+ " is not readable or not directory");
-		}
-		Path dir = f.toPath();
-		try {
-			dir.register(watcher, ENTRY_CREATE);
-		} catch (IOException e) {
-			logger.error("Watch key not registred", e);
-			throw e;
-		}
-		watchigDirectories.add(f);
+
+		fileWatcher.addDirectory(new File(directory));
 
 	}
 
 	public void startService() throws ServiceException {
-			if (watchigDirectories.isEmpty()) {
-				throw new ServiceException("List directories for watching is empty");
-			} 
-			
-			ProducerFactory prodFactory = initProducerFactory();
-			if(prodFactory == null){
-				throw new ServiceException("Producer factory not created");
-			}
-			ConsumerFactory consumerFactory = initConsumerFactory();
-			if(consumerFactory == null){
-				throw new ServiceException("Consumer factory not created");
-			}
-			FileWatcher fileWatcher = initFileWatcher();
-			if(fileWatcher == null){
-				throw new ServiceException("File watcher not created");
-			}
-			
-			
-			logger.info("Parameters initialized");
-			executorService.execute(fileWatcher);
+		if (fileWatcher == null) {
+			throw new ServiceException("File watcher not created");
+		}
 
-			for (int i = 0; i < producerCount; i++) {
-				try {
-					executorService.execute(prodFactory.createProducer());
-				} catch (FactoryException e) {
-					logger.error("Producer factory",e);
-					stopService();
-					return;
-				}
-			}
-			logger.info("Executed {} producer(s)", producerCount);
+		ProducerFactory prodFactory = initProducerFactory();
+		if (prodFactory == null) {
+			throw new ServiceException("Producer factory not created");
+		}
+		ConsumerFactory consumerFactory = initConsumerFactory();
+		if (consumerFactory == null) {
+			throw new ServiceException("Consumer factory not created");
+		}
 
-			for (int i = 0; i < consumerCount; i++) {
-				executorService.execute(consumerFactory.createConsumer());
+		logger.info("Parameters initialized");
+		executorService.execute(fileWatcher);
+
+		for (int i = 0; i < producerCount; i++) {
+			try {
+				executorService.execute(prodFactory.createProducer());
+			} catch (FactoryException e) {
+				logger.error("Producer factory", e);
+				stopService();
+				return;
 			}
-			logger.info("Executed {} consumer(s)", consumerCount);
-			logger.info("Service started");
+		}
+		logger.info("Executed {} producer(s)", producerCount);
+
+		for (int i = 0; i < consumerCount; i++) {
+			executorService.execute(consumerFactory.createConsumer());
+		}
+		logger.info("Executed {} consumer(s)", consumerCount);
+		logger.info("Service started");
 	}
 
 	public void stopService() {
@@ -134,19 +108,12 @@ public class AppServiceImpl implements AppService {
 		executorService.shutdown();
 	}
 
-	private ProducerFactory initProducerFactory(){
+	private ProducerFactory initProducerFactory() {
 		ProducerFactory prodFactory = new ProducerFactoryImpl();
-		XmlProviderFactory factory = new JAXBProviderFactory();
-		XmlProvider provider;
-		try {
-			provider = factory.createProvider();
-		} catch (FactoryException e) {
-			logger.error("Factory can't create producer", e);
-			return null;
-		}
+
 		return prodFactory.setDropStorage(drop).setFileProvider(fileProvider)
 				.setFileQuequeStorage(fileStorage).setMapper(mapper)
-				.setXmlProvider(provider);
+				.setXmlProviderFactory(new JAXBProviderFactory());
 
 	}
 
@@ -156,15 +123,23 @@ public class AppServiceImpl implements AppService {
 		return consumerFactory.addDropStorage(drop).addMapper(mapper)
 				.addPaymentDAO(dao);
 	}
-	
-	private FileWatcher initFileWatcher(){
+
+	private FileWatcher initFileWatcher(File defaultSourceDirectory) {
+		FileWatcher watcher = null;
 		try {
-			return new FileWatcher(new File(
-					"src\\test\\resources"), fileStorage);
+			watcher = new FileWatcher(fileStorage);
 		} catch (IOException e) {
-			logger.error("Can't create file watcher",e);
+			logger.error("Can't create file watcher", e);
 			return null;
 		}
+		if (defaultSourceDirectory != null) {
+			try {
+				watcher.addDirectory(defaultSourceDirectory);
+			} catch (IOException e) {
+				logger.info("Add default source directory", e);
+			}
+		}
+		return watcher;
 	}
 
 	@Override
@@ -172,7 +147,5 @@ public class AppServiceImpl implements AppService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
 
 }

@@ -39,16 +39,12 @@ public class JAXBProvider implements XmlProvider{
 	public void parse(File xml) throws FileNotFoundException, XmlException {
 		data.clear();
 		if(xml==null || !xml.exists()){
-			return;
+			throw new FileNotFoundException("File not founded");
 		}
 		PaymentsXml paymentsRoot = null;
 		try {
 			paymentsRoot = (PaymentsXml) unmarshaller
 					.unmarshal(new FileInputStream(xml));
-		} catch (FileNotFoundException e) {
-			logger.error(
-					"XML reading: File not found: " + xml.getName(), e);
-			throw e;
 		} catch (JAXBException e) {
 			logger.error("XML reading: Error in unmarshalling file: "
 					+ xml.getName(), e);

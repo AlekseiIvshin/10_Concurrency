@@ -7,11 +7,12 @@ import concurrency.quequestorages.drop.DropSetter;
 import concurrency.quequestorages.files.FileStorageReadOnly;
 import mapper.Mapper;
 import xml.provider.XmlProvider;
+import xml.provider.XmlProviderFactory;
 
 public class ProducerFactoryImpl implements ProducerFactory {
 	private DropSetter drop;
 	private Mapper mapper;
-	private XmlProvider parser;
+	private XmlProviderFactory parser;
 	private FileStorageReadOnly fileStorage;
 	private FileProvider fileProvider;
 	
@@ -35,7 +36,7 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	}
 
 	@Override
-	public ProducerFactory setXmlProvider(XmlProvider parser) {
+	public ProducerFactory setXmlProviderFactory(XmlProviderFactory parser) {
 		this.parser = parser;
 		return this;
 	}
@@ -49,7 +50,7 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	@Override
 	public Producer createProducer() throws FactoryException {
 		try{
-			return new ProducerImpl(drop, mapper, fileProvider, parser, fileStorage);
+			return new ProducerImpl(drop, mapper, fileProvider, parser.createProvider(), fileStorage);
 		} catch (NullPointerException e){
 			throw new FactoryException("Some components are null or weren't setted to factory. "+e.getMessage());
 		}

@@ -22,7 +22,7 @@ public class JAXBProviderFactory implements XmlProviderFactory {
 			throw new FactoryException("Can't create XML provider:"+e.getMessage());
 		}
 	}
-	private Schema initSchema() throws IOException, SAXException{
+	public Schema initSchema() throws IOException, SAXException{
 		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 		String schemaLoc;
 		schemaLoc = new ConfigReader().getValue("schemaLocation");

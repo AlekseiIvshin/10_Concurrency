@@ -25,14 +25,14 @@ public class ServiceFactoryImpl implements ServiceFactory {
 	private final int defaultProducerCount = 2;
 	private final int defaultConsumerCount = 2;
 	private final int defaultDropQuequeSize = 10;
-	private final int defaultFileQuequeSize = 10;
+	private final int defaultFileQuequeSize = 10; 
 	
 
 	@Override
 	public AppService createService() throws FactoryException {
 		String destPath = "";
 		try {
-			destPath = configReader.getValue("temporaryDirectory");
+			destPath = configReader.getValue("temporaryDirectory"); 
 		} catch (IOException e1) {
 			destPath = defaultTempPath;
 		}
@@ -63,9 +63,18 @@ public class ServiceFactoryImpl implements ServiceFactory {
 			fileQueueSize = defaultFileQuequeSize;
 		}
 		
+		File defaultSourceDirctory = null;
+		try {
+			String defaultSourceDirctoryName = configReader.getValue("sourceDirectory");
+			defaultSourceDirctory = new File(defaultSourceDirctoryName);
+			if(!defaultSourceDirctory.exists() || !defaultSourceDirctory.isDirectory()){
+				defaultSourceDirctory = null;
+			}
+		} catch (IOException e1) {
+			defaultSourceDirctory = null;
+		}
 		
-		
-		Mapper mapper = initMapper();
+		Mapper mapper = new MapperImpl();
 		Drop drop = new DropImpl(dropQueueSize);
 		FileStorage fileStorage = new FileStorageImpl(fileQueueSize);
 		FileProvider fileProvider =  
@@ -74,17 +83,11 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		
 		
 		try {
-			return new AppServiceImpl(drop, mapper, fileStorage,fileProvider,prodCount, consCount);
+			return new AppServiceImpl(drop, mapper, fileStorage,fileProvider,prodCount, consCount, defaultSourceDirctory);
 		} catch (IOException e) {
 			throw new FactoryException(e.getMessage());
 		}
-	}
-	
-	
-	public Mapper initMapper(){
-		return new MapperImpl();
-	}
-	
+	}	
 
 	
 

@@ -31,7 +31,7 @@ public class App {
 			return;
 		}
 		
-		processDirect(app);
+		processDirect(app); 
 	}
 
 	public static void processDirect(AppService app) {

@@ -14,6 +14,7 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 
 import xml.provider.XmlProvider;
+import xml.provider.XmlProviderFactory;
 import common.FactoryException;
 import common.FileProvider;
 import concurrency.quequestorages.drop.Drop;
@@ -31,6 +32,8 @@ public class ProducerFactoryImplTest {
 	FileStorage fileStorage = mock(FileStorage.class);
 	@Mock
 	XmlProvider xmlProvider = mock(XmlProvider.class);
+	@Mock
+	XmlProviderFactory xmlProviderFactory = mock(XmlProviderFactory.class);
 	@Mock
 	FileProvider fileProv = mock(FileProvider.class);
 	
@@ -59,7 +62,7 @@ public class ProducerFactoryImplTest {
 
 	@Test
 	public void testAddXmlProvider() {
-		assertNotNull(factory.setXmlProvider(xmlProvider));
+		assertNotNull(factory.setXmlProviderFactory(xmlProviderFactory));
 	}
 
 	@Test
@@ -81,7 +84,7 @@ public class ProducerFactoryImplTest {
 		assertNotNull(factory.setDropStorage(drop));
 		assertNotNull(factory.setMapper(mapper));
 		assertNotNull(factory.setFileQuequeStorage(fileStorage));
-		assertNotNull(factory.setXmlProvider(xmlProvider));
+		assertNotNull(factory.setXmlProviderFactory(xmlProviderFactory));
 		assertNotNull(factory.setFileProvider(fileProv));
 		assertNotNull(factory.createProducer());	
 	}

@@ -12,40 +12,54 @@ import org.slf4j.LoggerFactory;
 
 public class FileProviderImpl implements FileProvider {
 
-	final static Logger logger = LoggerFactory.getLogger(FileProviderImpl.class);
+	final static Logger logger = LoggerFactory
+			.getLogger(FileProviderImpl.class);
 	private final File destDirectory;
-	
-	public FileProviderImpl(File destDirectory){
+
+	public FileProviderImpl(File destDirectory) {
 		this.destDirectory = destDirectory;
 	}
-	
+
 	@Override
-	public File copyToTempFile(File sourceFile, boolean deleteSoruceFile) {
-		if(sourceFile == null || !sourceFile.exists()){
-			return null;
+	public File prepareFile(File sourceFile) throws IOException {
+		return copyToTempFile(sourceFile, true);
+	}
+
+	public File copyToTempFile(File sourceFile, boolean deleteSoruceFile)
+			throws IOException {
+		if (!destDirectory.exists()) {
+			throw new IOException("Destination direcotry not exist: "
+					+ destDirectory.getAbsolutePath());
+		}
+		if (!sourceFile.exists()) {
+			throw new IOException("Source file not exist: "
+					+ sourceFile.getAbsolutePath());
 		}
 		File dest = null;
 		// TODO: nonoTime() - it's efficient???
 		try {
-			dest = File.createTempFile(
-					"tmp" + sourceFile.getName().hashCode() + System.nanoTime(), ".xml",
-					destDirectory);
+			dest = File.createTempFile("tmp" + sourceFile.getName().hashCode()
+					+ System.nanoTime(), ".xml", destDirectory);
 			copyFileUsingStream(sourceFile, dest);
-			logger.info(sourceFile.getName() + " -> " + dest.getName());
-			if(deleteSoruceFile){
-				sourceFile.delete();}
+			logger.debug(sourceFile.getName() + " -> " + dest.getName());
+			if (deleteSoruceFile) {
+				sourceFile.delete();
+			}
 		} catch (IOException e1) {
-			logger.error("Copy to temp file",e1);
+			logger.error("Copy to temp file: Destination directory - "
+					+ destDirectory, e1);
+			throw e1;
 		}
 
 		return dest;
 	}
+
 	@Override
 	public void close() {
-		if(destDirectory!=null && destDirectory.listFiles().length==0)
+		if (destDirectory != null && destDirectory.listFiles().length == 0)
 			destDirectory.delete();
 	}
-	
+
 	private static void copyFileUsingStream(File source, File dest)
 			throws IOException {
 		InputStream is = null;
@@ -70,14 +84,9 @@ public class FileProviderImpl implements FileProvider {
 
 	@Override
 	public void close(File f) {
-		if(f!=null){
+		if (f != null) {
 			f.delete();
 		}
-	}
-
-	@Override
-	public File getTempDestination() {
-		return destDirectory;
 	}
 
 }
