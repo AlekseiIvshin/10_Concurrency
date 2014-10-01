@@ -18,8 +18,7 @@ public class DropImpl implements Drop {
 	}
 
 	@Override
-	public synchronized boolean setPayment(PaymentDomain payment)
-			throws InterruptedException {
+	public synchronized boolean setPayment(PaymentDomain payment){
 		return queue.offer(payment);
 	}
 

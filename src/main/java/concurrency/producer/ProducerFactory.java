@@ -1,5 +1,6 @@
 package concurrency.producer;
 
+import common.FactoryException;
 import common.FileProvider;
 import concurrency.quequestorages.Drop;
 import concurrency.quequestorages.FileStorageReadOnly;
@@ -8,11 +9,11 @@ import mapper.Mapper;
 
 public interface ProducerFactory {
 
-	ProducerFactory addDropStorage(Drop drop);
-	ProducerFactory addMapper(Mapper mapper);
-	ProducerFactory addFileQuequeStorage(FileStorageReadOnly fileStorage);
-	ProducerFactory addXmlProvider(XmlProvider parser);
-	ProducerFactory addFileProvider(FileProvider fileProvider);
-	Producer createProducer();
+	ProducerFactory setDropStorage(Drop drop);
+	ProducerFactory setMapper(Mapper mapper);
+	ProducerFactory setFileQuequeStorage(FileStorageReadOnly fileStorage);
+	ProducerFactory setXmlProvider(XmlProvider parser);
+	ProducerFactory setFileProvider(FileProvider fileProvider);
+	Producer createProducer() throws FactoryException;
 	
 }

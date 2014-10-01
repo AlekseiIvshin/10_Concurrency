@@ -1,5 +1,6 @@
 package concurrency.producer;
 
+import common.FactoryException;
 import common.FileProvider;
 import concurrency.quequestorages.Drop;
 import concurrency.quequestorages.FileStorageReadOnly;
@@ -15,38 +16,42 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	
 	
 	@Override
-	public ProducerFactory addDropStorage(Drop drop) {
+	public ProducerFactory setDropStorage(Drop drop) {
 		this.drop = drop;
 		return this;
 	}
 
 	@Override
-	public ProducerFactory addMapper(Mapper mapper) {
+	public ProducerFactory setMapper(Mapper mapper) {
 		this.mapper = mapper;
 		return this;
 	}
 
 	@Override
-	public ProducerFactory addFileQuequeStorage(FileStorageReadOnly fileStorage) {
+	public ProducerFactory setFileQuequeStorage(FileStorageReadOnly fileStorage) {
 		this.fileStorage = fileStorage;
 		return this;
 	}
 
 	@Override
-	public ProducerFactory addXmlProvider(XmlProvider parser) {
+	public ProducerFactory setXmlProvider(XmlProvider parser) {
 		this.parser = parser;
 		return this;
 	}
 	
 	@Override
-	public ProducerFactory addFileProvider(FileProvider fileProvider) {
+	public ProducerFactory setFileProvider(FileProvider fileProvider) {
 		this.fileProvider = fileProvider;
 		return this;
 	}
 
 	@Override
-	public Producer createProducer() {
-		return new ProducerImpl(drop, mapper, fileProvider, parser, fileStorage);
+	public Producer createProducer() throws FactoryException {
+		try{
+			return new ProducerImpl(drop, mapper, fileProvider, parser, fileStorage);
+		} catch (NullPointerException e){
+			throw new FactoryException("Some components are null or weren't setted to factory. "+e.getMessage());
+		}
 	}
 
 

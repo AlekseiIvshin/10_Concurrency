@@ -9,10 +9,11 @@ import mapper.MapperImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.FactoryException;
+
 import appservice.AppService;
 import appservice.ServiceException;
 import appservice.ServiceFactoryImpl;
-import xml.FactoryException;
 import concurrency.quequestorages.Drop;
 import concurrency.quequestorages.DropImpl;
 import concurrency.quequestorages.FileStorage;

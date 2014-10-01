@@ -14,7 +14,8 @@ import javax.xml.validation.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xml.XmlException;
+import common.XmlException;
+
 import xml.elements.PaymentXml;
 import xml.elements.PaymentsXml;
 
@@ -23,15 +24,12 @@ public class JAXBProvider implements XmlProvider{
 	
 	final static Logger logger = LoggerFactory.getLogger(JAXBProvider.class);
 
-	Schema schema;
-	Unmarshaller unmarshaller;
-	Queue<PaymentXml> data;
-	int currentPosition;
+	private Unmarshaller unmarshaller;
+	private Queue<PaymentXml> data;
 	
 	public JAXBProvider(Schema schema) throws JAXBException {
 		data = new LinkedBlockingQueue<PaymentXml>();
 		
-		this.schema = schema;
 		unmarshaller = JAXBContext.newInstance(
 				PaymentsXml.class).createUnmarshaller();
 		unmarshaller.setSchema(schema);

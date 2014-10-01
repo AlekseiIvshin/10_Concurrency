@@ -2,9 +2,7 @@ package concurrency.quequestorages;
 
 import domain.PaymentDomain;
 
-public interface Drop{
+public interface DropGetter {
 
 	PaymentDomain getPayment();
-
-	boolean setPayment(PaymentDomain payment);
 }

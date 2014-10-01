@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.nio.file.WatchService;
 import java.util.concurrent.ExecutorService;
 
-import xml.FactoryException;
 import mapper.Mapper;
 import mapper.MapperImpl;
 import common.ConfigReader;
+import common.FactoryException;
 import common.FileProvider;
 import common.FileProviderImpl;
 import concurrency.quequestorages.Drop;

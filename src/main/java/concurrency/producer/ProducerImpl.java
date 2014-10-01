@@ -3,18 +3,21 @@ package concurrency.producer;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import mapper.Mapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import xml.elements.PaymentXml;
+import xml.provider.XmlProvider;
+
 import common.FileProvider;
+import common.XmlException;
+
 import concurrency.quequestorages.Drop;
 import concurrency.quequestorages.FileStorageReadOnly;
 import domain.PaymentDomain;
 import domain.PaymentDomainImpl;
-import mapper.Mapper;
-import xml.XmlException;
-import xml.elements.PaymentXml;
-import xml.provider.XmlProvider;
 
 public class ProducerImpl implements Producer {
 
@@ -33,7 +36,18 @@ public class ProducerImpl implements Producer {
 	private int errors;
 
 	public ProducerImpl(Drop drop, Mapper mapper, FileProvider fileProvider,
-			XmlProvider xmlProvider, FileStorageReadOnly fileStorage) {
+			XmlProvider xmlProvider, FileStorageReadOnly fileStorage)
+			throws NullPointerException {
+		if (drop == null || mapper == null || fileProvider == null
+				|| xmlProvider == null || fileStorage == null) {
+			String errorComponents = (drop == null ? "Drop, " : "")
+					+ (mapper == null ? "Mapper, " : "")
+					+ (fileProvider == null ? "FileProvider, " : "")
+					+ (fileStorage == null ? "FileStorage, " : "")
+					+ (xmlProvider == null ? "XmlProvider" : "");
+			throw new NullPointerException("Must be not null: "
+					+ errorComponents);
+		}
 		this.fileProvider = fileProvider;
 		this.drop = drop;
 		this.mapper = mapper;
@@ -45,13 +59,8 @@ public class ProducerImpl implements Producer {
 	@Override
 	public void run() {
 		while (!Thread.interrupted()) {
-			// Get temp copy of file from readed directory
-			File f = getNextFileFromStorage();
-
-			File tmpFile = getNextTmpFileAndDeleteReal(f);
-
 			try {
-				xmlProvider.parse(tmpFile);
+				transfer();
 			} catch (FileNotFoundException e) {
 				logger.error("File not founded", e);
 				errors++;
@@ -61,20 +70,27 @@ public class ProducerImpl implements Producer {
 				errors++;
 				continue;
 			}
-
-			PaymentXml tmp = null;
-			while ((tmp = xmlProvider.getNextPayment()) != null) {
-				setPaymentsToDrop(map(tmp));
-			}
-			fileProvider.close(tmpFile);
 		}
 		fileProvider.close();
+	}
+
+	public void transfer() throws FileNotFoundException, XmlException {
+		// Get temp copy of file from readed directory
+		File fileFromQueque = getNextFileFromStorage();
+		File tmpFile = getNextTmpFileAndDeleteReal(fileFromQueque);
+
+		xmlProvider.parse(tmpFile);
+
+		PaymentXml nextPayment = null;
+		while ((nextPayment = xmlProvider.getNextPayment()) != null) {
+			setPaymentsToDrop(map(nextPayment));
+		}
+		fileProvider.close(tmpFile);
 	}
 
 	public int getErrorCount() {
 		return errors;
 	}
-
 
 	private File getNextFileFromStorage() {
 		File f = null;
@@ -83,6 +99,7 @@ public class ProducerImpl implements Producer {
 				try {
 					fileStorageLock.wait();
 				} catch (InterruptedException e) {
+					// TODO: 
 				}
 			}
 			fileStorageLock.notifyAll();
@@ -101,19 +118,15 @@ public class ProducerImpl implements Producer {
 	}
 
 	private void setPaymentsToDrop(PaymentDomain payment) {
-		try {
-			synchronized (sentLock) {
-				while (!drop.setPayment(payment)) {
-					try {
-						sentLock.wait();
-					} catch (InterruptedException e) {
-					}
+		synchronized (sentLock) {
+			while (!drop.setPayment(payment)) {
+				try {
+					sentLock.wait();
+				} catch (InterruptedException e) {
+					// TODO: 
 				}
-				sentLock.notifyAll();
 			}
-
-		} catch (InterruptedException e) {
-			logger.error("Interrapted ", e);
+			sentLock.notifyAll();
 		}
 	}
 

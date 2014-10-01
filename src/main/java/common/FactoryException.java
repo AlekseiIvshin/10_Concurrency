@@ -1,4 +1,4 @@
-package xml;
+package common;
 
 public class FactoryException  extends Exception{
 

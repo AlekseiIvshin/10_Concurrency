@@ -9,8 +9,8 @@ import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
 
-import xml.FactoryException;
 import common.ConfigReader;
+import common.FactoryException;
 
 public class JAXBProviderFactory implements XmlProviderFactory {
 

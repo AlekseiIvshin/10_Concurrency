@@ -14,8 +14,8 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.FactoryException;
 import common.FileProvider;
-import xml.FactoryException;
 import xml.provider.JAXBProviderFactory;
 import xml.provider.XmlProvider;
 import xml.provider.XmlProviderFactory;
@@ -112,7 +112,13 @@ public class AppServiceImpl implements AppService {
 			executorService.execute(fileWatcher);
 
 			for (int i = 0; i < producerCount; i++) {
-				executorService.execute(prodFactory.createProducer());
+				try {
+					executorService.execute(prodFactory.createProducer());
+				} catch (FactoryException e) {
+					logger.error("Producer factory",e);
+					stopService();
+					return;
+				}
 			}
 			logger.info("Executed {} producer(s)", producerCount);
 
@@ -138,9 +144,9 @@ public class AppServiceImpl implements AppService {
 			logger.error("Factory can't create producer", e);
 			return null;
 		}
-		return prodFactory.addDropStorage(drop).addFileProvider(fileProvider)
-				.addFileQuequeStorage(fileStorage).addMapper(mapper)
-				.addXmlProvider(provider);
+		return prodFactory.setDropStorage(drop).setFileProvider(fileProvider)
+				.setFileQuequeStorage(fileStorage).setMapper(mapper)
+				.setXmlProvider(provider);
 
 	}
 

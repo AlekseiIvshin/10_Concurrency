@@ -3,7 +3,8 @@ package xml.provider;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import xml.XmlException;
+import common.XmlException;
+
 import xml.elements.PaymentXml;
 
 public interface XmlProvider {

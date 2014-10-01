@@ -23,7 +23,6 @@ public class FileStorageImpl implements FileStorage {
 
 	@Override
 	public synchronized boolean setFile(File f) {
-		logger.info("Added {}. In storage {} items.", f.getName(), queue.size());
 		return queue.offer(f);
 	}
 }
