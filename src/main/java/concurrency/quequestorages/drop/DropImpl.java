@@ -16,7 +16,10 @@ public class DropImpl implements Drop {
 		return queue.poll();
 	}
 
-	public synchronized boolean setPayment(PaymentDomain payment){
+	public synchronized boolean setPayment(PaymentDomain payment) {
+		if (payment == null) {
+			return true;
+		}
 		return queue.offer(payment);
 	}
 

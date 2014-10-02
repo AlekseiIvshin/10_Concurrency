@@ -49,7 +49,7 @@ public class AppServiceImplTest {
 			return;
 		}
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			fail(e.getMessage());
 		}

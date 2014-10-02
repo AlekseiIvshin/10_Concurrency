@@ -12,22 +12,20 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
+import xml.elements.PaymentXml;
 import common.FactoryException;
 import common.SpeedTest;
 import common.XmlException;
-import xml.elements.PaymentXml;
 
-public class JAXBProviderTest {
-
+public class JAXBplusStAXProviderTest {
 	XmlProvider provider;
-
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 
 	@Before
 	public void setUp() {
 		try {
-			provider = new JAXBProviderFactory().createProvider();
+			provider = new StreamProviderFactory().createProvider();
 		} catch (FactoryException e) {
 			fail(e.getMessage());
 		}
@@ -87,29 +85,14 @@ public class JAXBProviderTest {
 			fail(e.getMessage());
 			return;
 		}
-		for (int i = 0; i < 2; i++) {
-			PaymentXml payment = provider.getNextPayment();
-			assertNotNull("Unexpected payment equals null", payment);
+		
+		int count = 0;
+		while(provider.getNextPayment()!=null){
+			count++;
 		}
-		PaymentXml payment = provider.getNextPayment();
-		assertNull("Unexpected payment not equals null", payment);
+		assertEquals(count, 2);
 	}
 
-	@Test
-	public void testParseCorruptedFile() {
-		// expectedException.expect(XmlException.class);
-		File testXml = new File(
-				"src\\test\\resources\\xmls\\xmlExampleCorrupted.xml");
-		try {
-			provider.parse(testXml);
-			fail("File was corrupted, but was readed!");
-		} catch (FileNotFoundException e) {
-			fail("Must be other error!");
-		} catch (XmlException e) {
-		}
-
-	}
-	
 	@Category(SpeedTest.class)
 	@Test
 	public void testReadSpeedOneBig(){
@@ -120,16 +103,13 @@ public class JAXBProviderTest {
 			fail(e.getMessage());
 			return;
 		}
-		for (int i = 0; i < 1; i++) {
-			PaymentXml payment = provider.getNextPayment();
-			assertNotNull("Unexpected payment equals null", payment);
-		}
+		
 		int count = 0;
 		while(provider.getNextPayment()!=null){
 			count++;
 		}
 		assertNotEquals(count, 0);
-		System.err.println("[JAXB]Payment count = "+count);
+		System.err.println("[JAXB+StAX]Payment count = "+count);
 	}
 
 }

@@ -63,5 +63,12 @@ public class JAXBProvider implements XmlProvider{
 		return data.poll();
 	}
 
+	@Override
+	public void close() {
+		data = null;
+		unmarshaller = null;
+	}
+
+	
 	
 }

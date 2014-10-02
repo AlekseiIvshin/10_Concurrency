@@ -55,7 +55,7 @@ public class FileWatcher implements Runnable {
 					+ " is not readable or not directory");
 		}
 		if (watchigDirectories.contains(directory)) {
-			logger.debug("File watcher already contains {}",
+			logger.debug("[File watcher] already [contains] '{}' in [directories]",
 					directory.getAbsolutePath());
 			return;
 		}
@@ -63,7 +63,7 @@ public class FileWatcher implements Runnable {
 		try {
 			dir.register(watcher, ENTRY_CREATE);
 			watchigDirectories.add(directory);
-			logger.info("{} now is watched", directory.getAbsolutePath());
+			logger.info("[File watcher] add '{}' to [directories]", directory.getAbsolutePath());
 		} catch (IOException e) {
 			logger.error("Watch key not registred", e);
 			throw e;
@@ -73,10 +73,10 @@ public class FileWatcher implements Runnable {
 	@Override
 	public void run() {
 		if (watchigDirectories.isEmpty()) {
-			logger.info("File wathcers directory list is empty. File watcher service stopped");
+			logger.info("[File wathcer] have not any items in [directories]. [File watcher] service stopped");
 			return;
 		}
-		logger.info("File watcher start work");
+		logger.info("[File watcher] [Starting]");
 		setExistingFilesToStorage();
 		scanDirectory();
 	}
@@ -90,8 +90,7 @@ public class FileWatcher implements Runnable {
 	}
 
 	private void scanDirectory() {
-		logger.info("Start watch to directories (count: {})",
-				watchigDirectories.size());
+		logger.info("[Start][Watch] to [directories]");
 		while (!Thread.interrupted()) {
 			WatchKey key;
 			try {
@@ -111,7 +110,7 @@ public class FileWatcher implements Runnable {
 				WatchEvent<Path> ev = (WatchEvent<Path>) event;
 				File fileName = ev.context().toFile();
 				setFileToQueque(fileName);
-				logger.info("Setted {} to file queque", fileName.getName());
+				logger.info("[Set][File] '{}' to [file queque]", fileName.getName());
 			}
 			key.reset();
 		}
@@ -124,17 +123,18 @@ public class FileWatcher implements Runnable {
 					storageLock.wait();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					logger.error("Thread interrupted", e);
+					logger.error("[Set][File] '"+f.getName()+"' to [file queque]: ERROR",e);
 					return;
 				}
 			}
+			logger.debug("[Set][File] '{}' to [file queque]: SUCCESS",f.getName());
 			storageLock.notifyAll();
 		}
 	}
 
 	private void setExistingFilesToStorage() {
 		for (File watchedDir : watchigDirectories) {
-			logger.info("Set already exisiting files from {} to queque",
+			logger.info("[Set][Files] from '{}' to [file queque]",
 					watchedDir.getAbsolutePath());
 			setExistingFiles(watchedDir);
 		}

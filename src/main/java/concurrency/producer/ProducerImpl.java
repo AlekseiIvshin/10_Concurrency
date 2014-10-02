@@ -11,9 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import xml.elements.PaymentXml;
 import xml.provider.XmlProvider;
+
 import common.FileProvider;
 import common.XmlException;
-import concurrency.quequestorages.drop.Drop;
+
 import concurrency.quequestorages.drop.DropSetter;
 import concurrency.quequestorages.files.FileStorageReadOnly;
 import domain.PaymentDomain;
@@ -52,7 +53,7 @@ public class ProducerImpl implements Producer {
 		this.drop = drop;
 		this.mapper = mapper;
 		this.xmlProvider = xmlProvider;
-		this.fileStorage = fileStorage;
+		this.fileStorage = fileStorage; 
 		errors = 0;
 	}
 
@@ -62,7 +63,7 @@ public class ProducerImpl implements Producer {
 			try {
 				transfer();
 			} catch (FileNotFoundException e) {
-				logger.error("File not founded", e);
+				logger.error("File not founded", e); 
 				errors++;
 				continue;
 			} catch (XmlException e) {
@@ -79,22 +80,26 @@ public class ProducerImpl implements Producer {
 		File fileFromQueque = getNextFileFromStorage(); 
 		if(fileFromQueque == null){
 			return;}
+		logger.debug("[Get][File] '{}' [file queque]", fileFromQueque.getName());
 		
 		File tmpFile = getPreparedFile(fileFromQueque);
 		if(tmpFile ==null)
 			return;
-
+		logger.debug("[Prepare][File] '{}' to work.", tmpFile.getName());
+		logger.debug("[Parse][File]: [Use] providr '{}'",xmlProvider.getClass().getName());
 		xmlProvider.parse(tmpFile);
 
 		PaymentXml nextPayment = null;
 		while ((nextPayment = xmlProvider.getNextPayment()) != null) {
+			logger.debug("[Get][Payment] '{}' from '{}'",nextPayment.toString(),tmpFile.getName());
 			setPaymentsToDrop(map(nextPayment));
 		}
+		xmlProvider.close();
 		fileProvider.close(tmpFile);
 	}
 
 	public int getErrorCount() {
-		return errors;
+		return errors; 
 	}
 
 	private File getNextFileFromStorage() {
@@ -136,6 +141,7 @@ public class ProducerImpl implements Producer {
 					// TODO: 
 				}
 			}
+			logger.debug("[Set][Payment] '{}' [drop queque]", payment.toString());
 			sentLock.notifyAll();
 		}
 	}

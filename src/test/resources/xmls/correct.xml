@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <payments>
 	<payment>
-                <executionDate>2014-09-28T09:21:12</executionDate>
-		<dateOfPayment>2014-09-28T09:15:12</dateOfPayment>
+        <dateOfExecute>2014-09-28T09:21:12</dateOfExecute>
+		<dateOfCreate>2014-09-28T09:15:12</dateOfCreate>
 		<cash>100.00</cash>
 		<bank>
 			<name>SberMer</name>
@@ -11,30 +11,34 @@
 		<payee>
 			<address>some address2</address>
 			<phone>18987</phone>
-			<fullName>Ivonesyan2</fullName>
+			<surname>Ivonesyan2</surname>
+			<name>Ivonesyan2</name>
+			<patronymic>Ivonesyan2</patronymic>
 			<document>
 				<type>PASSPORT</type>
 				<number>090909</number>
 				<series>1897</series>
 			</document>
-			<account>1708908989335609</account>
+			<account>10000000000000000000</account>
 		</payee>
 		<payer>
 			<address>some address</address>
 			<phone>123123</phone>
-			<fullName>Ivonesyan</fullName>
+			<surname>Ivonesyan</surname>
+			<name>Ivonesyan</name>
+			<patronymic>Ivonesyan</patronymic>
 			<document>
 				<type>PASSPORT</type>
 				<number>123112</number>
 				<series>1231</series>
 			</document>
-			<account>123123232335609</account>
+			<account>10000000000000000002</account>
 		</payer>
 		
 	</payment>
 	<payment>
-                <executionDate>2014-09-28T09:21:12</executionDate>
-		<dateOfPayment>2014-09-28T09:15:12</dateOfPayment>
+        <dateOfExecute>2014-09-28T09:21:12</dateOfExecute>
+		<dateOfCreate>2014-09-28T09:15:12</dateOfCreate>
 		<cash>100.00</cash>
 		<bank>
 			<name>SberMer</name>
@@ -43,25 +47,30 @@
 		<payee>
 			<address>some address2</address>
 			<phone>18987</phone>
-			<fullName>Ivonesyan2</fullName>
+			<surname>Ivonesyan2</surname>
+			<name>Ivonesyan2</name>
+			<patronymic>Ivonesyan2</patronymic>
 			<document>
 				<type>PASSPORT</type>
 				<number>090909</number>
 				<series>1897</series>
 			</document>
-			<account>1708908989335609</account>
+			<account>10000000000000000000</account>
 		</payee>
 		<payer>
 			<address>some address</address>
 			<phone>123123</phone>
-			<fullName>Ivonesyan</fullName>
+			<surname>Ivonesyan</surname>
+			<name>Ivonesyan</name>
+			<patronymic>Ivonesyan</patronymic>
 			<document>
 				<type>PASSPORT</type>
 				<number>123112</number>
 				<series>1231</series>
 			</document>
-			<account>123123232335609</account>
+			<account>10000000000000000002</account>
 		</payer>
 		
 	</payment>
+		
 </payments>

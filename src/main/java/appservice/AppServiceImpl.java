@@ -2,12 +2,7 @@ package appservice;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.WatchService;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,8 +12,7 @@ import org.slf4j.LoggerFactory;
 import common.FactoryException;
 import common.FileProvider;
 import xml.provider.JAXBProviderFactory;
-import xml.provider.XmlProvider;
-import xml.provider.XmlProviderFactory;
+import xml.provider.StreamProviderFactory;
 import mapper.Mapper;
 import concurrency.FileWatcher;
 import concurrency.consumer.ConsumerFactory;
@@ -30,7 +24,6 @@ import concurrency.quequestorages.drop.Drop;
 import concurrency.quequestorages.files.FileStorage;
 import dao.PaymentDAO;
 import dao.PaymentDAOImpl;
-import static java.nio.file.StandardWatchEventKinds.*;
 
 public class AppServiceImpl implements AppService {
 
@@ -113,7 +106,8 @@ public class AppServiceImpl implements AppService {
 
 		return prodFactory.setDropStorage(drop).setFileProvider(fileProvider)
 				.setFileQuequeStorage(fileStorage).setMapper(mapper)
-				.setXmlProviderFactory(new JAXBProviderFactory());
+				.setXmlProviderFactory(new StreamProviderFactory());
+				//.setXmlProviderFactory(new JAXBProviderFactory());
 
 	}
 

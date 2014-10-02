@@ -11,4 +11,5 @@ public interface XmlProvider {
 
 	void parse(File xml) throws FileNotFoundException, XmlException;
 	PaymentXml getNextPayment();
+	void close();
 }

@@ -21,10 +21,11 @@ public class ConsumerImpl implements Consumer {
 	private final static int waitFileTimeout = 1000;
 
 	private Object getLock = new Object();
-	//private Object persistEnity = new Object();
 
-	public ConsumerImpl(DropGetter drop, Mapper mapper, PaymentDAO dao) 
-			throws NullPointerException{
+	// private Object persistEnity = new Object();
+
+	public ConsumerImpl(DropGetter drop, Mapper mapper, PaymentDAO dao)
+			throws NullPointerException {
 		if (drop == null || mapper == null || dao == null) {
 			String errorComponents = (drop == null ? "Drop, " : "")
 					+ (mapper == null ? "Mapper, " : "")
@@ -40,17 +41,18 @@ public class ConsumerImpl implements Consumer {
 	@Override
 	public void run() {
 		while (!Thread.interrupted()) {
-			try{
+			try {
 				transfer();
-			}catch(Exception e){
+			} catch (Exception e) {
 				logger.error("Transfer error", e);
 				return;
 			}
 		}
 	}
-	
-	public void transfer(){
+
+	public void transfer() {
 		PaymentDomain domainPayment = getPaymentFromDrop();
+		logger.debug("[Get][Payment] '{}' from [drop queque]", domainPayment.toString());
 		if (domainPayment != null) {
 			setPaymentToDataBase(map(domainPayment));
 		}
@@ -63,6 +65,7 @@ public class ConsumerImpl implements Consumer {
 				try {
 					getLock.wait(waitFileTimeout);
 				} catch (InterruptedException e) {
+					return null;
 				}
 			}
 			getLock.notifyAll();
@@ -70,14 +73,20 @@ public class ConsumerImpl implements Consumer {
 
 		return domainPayment;
 	}
-	
-	private PaymentEntity map(PaymentDomain payment){
+
+	private PaymentEntity map(PaymentDomain payment) {
 		return mapper.map(payment, PaymentEntity.class);
 	}
 
 	private void setPaymentToDataBase(PaymentEntity paymentEntity) {
-		try{
+		if (paymentEntity == null) {
+			return;
+		}
+		logger.debug("[Set][Payment] '{}' to [data store]", paymentEntity);
+		try {
 			dao.add(paymentEntity);
-		} catch(EntityExistsException e){ }
+		} catch (EntityExistsException e) {
+			logger.debug("[Payment] already exist in [data store]", e);
+		}
 	}
 }

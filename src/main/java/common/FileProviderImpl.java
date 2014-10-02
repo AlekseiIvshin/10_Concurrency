@@ -46,8 +46,8 @@ public class FileProviderImpl implements FileProvider {
 				sourceFile.delete();
 			}
 		} catch (IOException e1) {
-			logger.error("Copy to temp file: Destination directory - "
-					+ destDirectory, e1);
+			logger.error("[Copy] to temp file. [Destination directory] '"
+					+ destDirectory + "'", e1);
 			throw e1;
 		}
 
@@ -85,6 +85,7 @@ public class FileProviderImpl implements FileProvider {
 	@Override
 	public void close(File f) {
 		if (f != null) {
+			logger.debug("[Close][File] '{}'", f.getAbsolutePath());
 			f.delete();
 		}
 	}
