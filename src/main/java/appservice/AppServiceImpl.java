@@ -6,14 +6,16 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import mapper.Mapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import xml.provider.StreamProviderFactory;
+
 import common.FactoryException;
 import common.FileProvider;
-import xml.provider.JAXBProviderFactory;
-import xml.provider.StreamProviderFactory;
-import mapper.Mapper;
+
 import concurrency.FileWatcher;
 import concurrency.consumer.ConsumerFactory;
 import concurrency.consumer.ConsumerFactoryImpl;

@@ -19,7 +19,7 @@ public class TestXmlGeneratorTest {
 		}
 		generator
 				.generate(
-						"C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\xxx",
+						"C:\\Users\\dnss\\Documents\\TESTS\\xxx",
 						100, 100);
 	}
 

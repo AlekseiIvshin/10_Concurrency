@@ -17,6 +17,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import concurrency.quequestorages.files.FileSetter;
 import concurrency.quequestorages.files.FileStorage;
 
 public class FileWatcher implements Runnable {
@@ -24,7 +25,7 @@ public class FileWatcher implements Runnable {
 	final static Logger logger = LoggerFactory.getLogger(FileWatcher.class);
 
 	private final WatchService watcher;
-	private final FileStorage fileStorage;
+	private final FileSetter fileStorage;
 	private Set<File> watchigDirectories;
 	private static final FileFilter filter = new FileFilter() {
 
@@ -37,7 +38,7 @@ public class FileWatcher implements Runnable {
 
 	private Object storageLock = new Object();
 
-	public FileWatcher(FileStorage storage) throws IOException {
+	public FileWatcher(FileSetter storage) throws IOException {
 		this.fileStorage = storage;
 		watcher = FileSystems.getDefault().newWatchService();
 		watchigDirectories = new HashSet<File>();

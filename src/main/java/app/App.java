@@ -3,9 +3,6 @@ package app;
 import java.io.File;
 import java.util.Scanner;
 
-import mapper.Mapper;
-import mapper.MapperImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +10,6 @@ import common.FactoryException;
 import appservice.AppService;
 import appservice.ServiceException;
 import appservice.ServiceFactoryImpl;
-import concurrency.quequestorages.drop.Drop;
-import concurrency.quequestorages.drop.DropImpl;
-import concurrency.quequestorages.files.FileStorage;
-import concurrency.quequestorages.files.FileStorageImpl;
 
 public class App {
 

@@ -1,7 +1,11 @@
 package concurrency.producer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,22 +25,20 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 
 import xml.elements.PaymentXml;
-import xml.provider.JAXBProviderFactory;
 import xml.provider.XmlProvider;
+
 import common.FactoryException;
 import common.FileProvider;
 import common.FileProviderImpl;
 import common.SlowTest;
 import common.XmlException;
+
 import concurrency.quequestorages.drop.Drop;
-import concurrency.quequestorages.drop.DropGetter;
 import concurrency.quequestorages.drop.DropImpl;
 import concurrency.quequestorages.drop.DropSetter;
 import concurrency.quequestorages.files.FileStorage;
 import concurrency.quequestorages.files.FileStorageImpl;
-import domain.PaymentDomain;
 import domain.PaymentDomainImpl;
-import static org.mockito.Mockito.*;
 
 public class ProducerImplTest {
 	ExecutorService executorService;
@@ -105,34 +107,4 @@ public class ProducerImplTest {
 		verify(fileProviderMock, atLeastOnce()).prepareFile(xmlFileMock);
 	}
 
-	@Ignore
-	@Category(SlowTest.class)
-	@Test
-	public void testTransfer() {
-		FileProvider fileProvider = new FileProviderImpl(new File(
-				"src\\test\\resources\\temp"));
-		DropSetter drop = new DropImpl(10);
-		Mapper mapper = new MapperImpl();
-		XmlProvider xmlProvider;
-		try {
-			xmlProvider = new JAXBProviderFactory().createProvider();
-		} catch (FactoryException e) {
-			fail(e.getMessage());
-			return;
-		}
-		FileStorage fileStorage = new FileStorageImpl(10);
-		fileStorage.setFile(new File("src\\test\\resources\\1.xml"));
-		fileStorage.setFile(new File("src\\test\\resources\\2.xml"));
-		fileStorage.setFile(new File("src\\test\\resources\\3.xml"));
-		fileStorage.setFile(new File("src\\test\\resources\\4.xml"));
-		ProducerImpl prod = new ProducerImpl(drop, mapper, fileProvider,
-				xmlProvider, fileStorage);
-		executorService.execute(prod);
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }

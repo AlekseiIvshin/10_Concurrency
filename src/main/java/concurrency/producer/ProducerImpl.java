@@ -11,12 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import xml.elements.PaymentXml;
 import xml.provider.XmlProvider;
-
 import common.FileProvider;
 import common.XmlException;
-
 import concurrency.quequestorages.drop.DropSetter;
-import concurrency.quequestorages.files.FileStorageReadOnly;
+import concurrency.quequestorages.files.FileGetter;
 import domain.PaymentDomain;
 import domain.PaymentDomainImpl;
 
@@ -27,7 +25,7 @@ public class ProducerImpl implements Producer {
 	private final DropSetter drop;
 	private final Mapper mapper;
 	private final XmlProvider xmlProvider;
-	private final FileStorageReadOnly fileStorage;
+	private final FileGetter fileStorage;
 	private final FileProvider fileProvider;
 
 	private Object fileLock = new Object();
@@ -35,7 +33,7 @@ public class ProducerImpl implements Producer {
 
 	public ProducerImpl(DropSetter drop, Mapper mapper,
 			FileProvider fileProvider, XmlProvider xmlProvider,
-			FileStorageReadOnly fileStorage) throws NullPointerException {
+			FileGetter fileStorage) throws NullPointerException {
 		if (drop == null || mapper == null || fileProvider == null
 				|| xmlProvider == null || fileStorage == null) {
 			String errorComponents = (drop == null ? "Drop, " : "")

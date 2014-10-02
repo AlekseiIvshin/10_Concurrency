@@ -2,7 +2,7 @@ package concurrency.quequestorages.files;
 
 import java.io.File;
 
-public interface FileStorageReadOnly {
+public interface FileSetter {
 
-	File getNextFile();
+	boolean setFile(File f);
 }
