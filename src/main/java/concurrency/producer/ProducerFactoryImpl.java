@@ -2,11 +2,9 @@ package concurrency.producer;
 
 import common.FactoryException;
 import common.FileProvider;
-import concurrency.quequestorages.drop.Drop;
 import concurrency.quequestorages.drop.DropSetter;
 import concurrency.quequestorages.files.FileStorageReadOnly;
 import mapper.Mapper;
-import xml.provider.XmlProvider;
 import xml.provider.XmlProviderFactory;
 
 public class ProducerFactoryImpl implements ProducerFactory {

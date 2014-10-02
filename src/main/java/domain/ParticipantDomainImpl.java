@@ -1,14 +1,5 @@
 package domain;
 
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Id;
-
-import common.ParticipantType;
-import dao.entities.Document;
-
 public class ParticipantDomainImpl implements ParticipantDomain {
 	
 	private String account;

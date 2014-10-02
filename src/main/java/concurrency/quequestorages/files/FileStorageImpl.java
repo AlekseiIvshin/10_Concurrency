@@ -7,8 +7,6 @@ import java.util.concurrent.BlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import domain.PaymentDomain;
-
 public class FileStorageImpl implements FileStorage {
 
 	final static Logger logger = LoggerFactory.getLogger(FileStorageImpl.class);

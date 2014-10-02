@@ -1,6 +1,6 @@
 package concurrency.consumer;
 
-import javax.persistence.EntityExistsException;
+import mapper.Mapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,6 @@ import concurrency.quequestorages.drop.DropGetter;
 import dao.PaymentDAO;
 import dao.entities.PaymentEntity;
 import domain.PaymentDomain;
-import mapper.Mapper;
 
 public class ConsumerImpl implements Consumer {
 
@@ -18,11 +17,6 @@ public class ConsumerImpl implements Consumer {
 	private final DropGetter drop;
 	private final Mapper mapper;
 	private final PaymentDAO dao;
-	private final static int waitFileTimeout = 1000;
-
-	private Object getLock = new Object();
-
-	// private Object persistEnity = new Object();
 
 	public ConsumerImpl(DropGetter drop, Mapper mapper, PaymentDAO dao)
 			throws NullPointerException {

@@ -1,10 +1,5 @@
 package domain;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.Set;
-
-import common.ParticipantType;
-
 public interface ParticipantDomain {
 
 	public String getSurname();

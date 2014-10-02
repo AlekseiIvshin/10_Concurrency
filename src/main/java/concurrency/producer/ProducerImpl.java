@@ -31,9 +31,6 @@ public class ProducerImpl implements Producer {
 	private final FileProvider fileProvider;
 
 	private Object fileLock = new Object();
-	private Object sentLock = new Object();
-	private Object fileStorageLock = new Object();
-
 	private int errors;
 
 	public ProducerImpl(DropSetter drop, Mapper mapper,

@@ -11,14 +11,12 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import appservice.ServiceException;
 import concurrency.quequestorages.files.FileStorage;
 
 public class FileWatcher implements Runnable {
@@ -45,9 +43,6 @@ public class FileWatcher implements Runnable {
 		watchigDirectories = new HashSet<File>();
 	}
 
-	public void initWatcher() {
-
-	}
 	
 	public void addDirectory(File directory) throws IOException {
 		if (!directory.isDirectory()) {
@@ -109,26 +104,14 @@ public class FileWatcher implements Runnable {
 
 				WatchEvent<Path> ev = (WatchEvent<Path>) event;
 				File fileName = ev.context().toFile();
-				setFileToQueque(fileName);
-				logger.info("[Set][File] '{}' to [file queque]", fileName.getName());
-			}
-			key.reset();
-		}
-	}
-
-	private void setFileToQueque(File f) {
-		synchronized (storageLock) {
-			while (!fileStorage.setFile(f)) {
-				try {
-					storageLock.wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					logger.error("[Set][File] '"+f.getName()+"' to [file queque]: ERROR",e);
+				if(fileStorage.setFile(fileName)){
+					logger.debug("[Set][File] '{}' to [file queque]: SUCCESS",fileName.getName());
+				} else {
+					logger.error("[Set][File] '"+fileName.getName()+"' to [file queque]: ERROR");
 					return;
 				}
 			}
-			logger.debug("[Set][File] '{}' to [file queque]: SUCCESS",f.getName());
-			storageLock.notifyAll();
+			key.reset();
 		}
 	}
 
