@@ -28,6 +28,7 @@ public class TestXmlGenerator {
 	public TestXmlGenerator() throws JAXBException {
 		marshaller = JAXBContext.newInstance(PaymentXml.class)
 				.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
 	}
 
 	public void generate(String path, int countInPer, int countOfFiles) {
@@ -47,6 +48,7 @@ public class TestXmlGenerator {
 			try {
 				generateOneFile(tmpFile, countInPer);
 			} catch (FileNotFoundException | XMLStreamException | JAXBException e) {
+				e.printStackTrace();
 				tmpFile.delete();
 			}
 
@@ -59,16 +61,15 @@ public class TestXmlGenerator {
 		try {
 			XMLOutputFactory factory = XMLOutputFactory.newInstance();
 			writer = factory
-					.createXMLStreamWriter(new FileOutputStream(tmpFile));
+					.createXMLStreamWriter(new FileOutputStream(tmpFile),"utf-8");
 
-			writer.writeStartDocument("urf-8", "1.0");
+			writer.writeStartDocument("utf-8", "1.0");
 			writer.writeStartElement("payments");
 			for (int i = 0; i < countOfPayments; i++) {
 				marshaller.marshal(getRandomData(), writer);
 			}
-			writer.writeEndElement();
 			writer.writeEndDocument();
-			writer.flush();
+			//writer.flush();
 		} finally {
 			writer.close();
 		}
@@ -84,7 +85,7 @@ public class TestXmlGenerator {
 		payment.setCash(rnd.nextFloat());
 		payment.setDateOfCreate(new Date(2014, 10, 2, rnd.nextInt(24), rnd
 				.nextInt(60), rnd.nextInt(60)));
-		payment.setDateOfCreate(new Date(2014, 10, 2, rnd.nextInt(24), rnd
+		payment.setDateOfExecute(new Date(2014, 10, 2, rnd.nextInt(24), rnd
 				.nextInt(60), rnd.nextInt(60)));
 
 		return payment;

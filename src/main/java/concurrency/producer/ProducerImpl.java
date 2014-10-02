@@ -91,8 +91,10 @@ public class ProducerImpl implements Producer {
 
 		PaymentXml nextPayment = null;
 		while ((nextPayment = xmlProvider.getNextPayment()) != null) {
-			logger.debug("[Get][Payment] '{}' from '{}'",nextPayment.toString(),tmpFile.getName());
-			setPaymentsToDrop(map(nextPayment));
+			logger.debug("[Get][Payment] '{}' from '{}'",nextPayment,tmpFile.getName());
+			PaymentDomain paymentDomain = map(nextPayment);
+			logger.debug("[Map][Payment] '{}' -> '{}'",nextPayment,paymentDomain);
+			setPaymentsToDrop(paymentDomain);
 		}
 		xmlProvider.close();
 		fileProvider.close(tmpFile);
@@ -109,7 +111,7 @@ public class ProducerImpl implements Producer {
 				try {
 					fileStorageLock.wait();
 				} catch (InterruptedException e) {
-					// TODO ???
+					logger.error("Interrupted",e);
 					return null;
 				}
 			}
@@ -123,6 +125,7 @@ public class ProducerImpl implements Producer {
 			try {
 				return fileProvider.prepareFile(f);
 			} catch (IOException e) {
+				logger.error("Prepare file error",e);
 				return null;
 			}
 		}
@@ -138,7 +141,8 @@ public class ProducerImpl implements Producer {
 				try {
 					sentLock.wait();
 				} catch (InterruptedException e) {
-					// TODO: 
+					logger.error("Interrupted",e);
+					return;
 				}
 			}
 			logger.debug("[Set][Payment] '{}' [drop queque]", payment.toString());

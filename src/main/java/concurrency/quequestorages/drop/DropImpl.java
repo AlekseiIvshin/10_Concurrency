@@ -13,14 +13,31 @@ public class DropImpl implements Drop {
 	}
 
 	public synchronized PaymentDomain getPayment() {
-		return queue.poll();
+		PaymentDomain domain=null;
+		while((domain = queue.poll())==null){
+			try{
+				wait();
+			}catch(InterruptedException e){
+				return null;
+			}
+		}
+		notifyAll();
+		return domain;
 	}
 
 	public synchronized boolean setPayment(PaymentDomain payment) {
 		if (payment == null) {
 			return true;
 		}
-		return queue.offer(payment);
+		while(!queue.offer(payment)){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return false;
+			}
+		}
+		notifyAll();
+		return true;
 	}
 
 }

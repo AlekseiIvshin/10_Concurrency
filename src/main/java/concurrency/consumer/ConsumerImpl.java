@@ -52,10 +52,17 @@ public class ConsumerImpl implements Consumer {
 
 	public void transfer() {
 		PaymentDomain domainPayment = getPaymentFromDrop();
-		logger.debug("[Get][Payment] '{}' from [drop queque]", domainPayment.toString());
-		if (domainPayment != null) {
-			setPaymentToDataBase(map(domainPayment));
+		if (domainPayment == null) {
+			return;
 		}
+		logger.debug("[Get][Payment] '{}' from [drop queque]",
+				domainPayment.toString());
+
+		PaymentEntity paymentEntity = map(domainPayment);
+		logger.debug("[Map][Payment] '{}' -> '{}'", domainPayment,
+				paymentEntity);
+		setPaymentToDataBase(paymentEntity);
+
 	}
 
 	private PaymentDomain getPaymentFromDrop() {
@@ -82,11 +89,17 @@ public class ConsumerImpl implements Consumer {
 		if (paymentEntity == null) {
 			return;
 		}
-		logger.debug("[Set][Payment] '{}' to [data store]", paymentEntity);
 		try {
-			dao.add(paymentEntity);
-		} catch (EntityExistsException e) {
-			logger.debug("[Payment] already exist in [data store]", e);
+			if (dao.add(paymentEntity)) {
+				logger.debug("[Set][Payment] '{}' to [data store]: SUCCESS",
+						paymentEntity);
+			} else {
+				logger.debug(
+						"[Set][Payment] '{}' to [data store]: ALREADY EXISTS",
+						paymentEntity);
+			}
+		} catch (Exception e) {
+			logger.error("[Set][Payment] to [data store]", e);
 		}
 	}
 }

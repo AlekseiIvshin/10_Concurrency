@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
+@XmlRootElement(name="payment")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "payment")
 public class PaymentXml{

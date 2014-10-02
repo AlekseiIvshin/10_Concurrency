@@ -16,7 +16,7 @@ public class TestXmlGeneratorTest {
 		} catch (JAXBException e) {
 			return;
 		}
-		generator.generate("src\\test\\resources\\xxx", 1, 3);
+		generator.generate("src\\test\\resources\\xxx", 100, 500);
 	}
 
 }

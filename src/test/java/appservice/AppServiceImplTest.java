@@ -21,8 +21,8 @@ public class AppServiceImplTest {
 	@Before
 	public void setUp() {
 		try {
-			appservice = new AppServiceImpl(new DropImpl(10), new MapperImpl(),
-					new FileStorageImpl(10), new FileProviderImpl(new File(
+			appservice = new AppServiceImpl(new DropImpl(2), new MapperImpl(),
+					new FileStorageImpl(2), new FileProviderImpl(new File(
 							"src\\test\\resources\\temp")), 2, 2, new File(
 							"src\\test\\resources"));
 		} catch (IOException e) {
@@ -49,7 +49,7 @@ public class AppServiceImplTest {
 			return;
 		}
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(60000);
 		} catch (InterruptedException e) {
 			fail(e.getMessage());
 		}

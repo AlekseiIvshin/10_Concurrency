@@ -8,4 +8,5 @@ import concurrency.quequestorages.files.FileStorage;
 
 public interface ServiceFactory {
 	AppService createService() throws FactoryException;
+	String getInitInfo();
 }

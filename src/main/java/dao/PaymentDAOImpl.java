@@ -18,24 +18,33 @@ public class PaymentDAOImpl implements PaymentDAO {
 	}
 
 	@Override
-	public void add(PaymentEntity payment) throws IllegalArgumentException, TransactionRequiredException, EntityExistsException {
+	public boolean add(PaymentEntity payment) throws IllegalArgumentException,
+			TransactionRequiredException, EntityExistsException {
 		EntityManager entityManager = emf.createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
 			MembersDAO members = new MembersDAOImpl();
 			PaymentMember payer = members.findByAccount(payment.getPayer()
 					.getAccount());
+			if(payer == null)
+			{
+				return false;
+			}
 			PaymentMember payee = members.findByAccount(payment.getPayee()
 					.getAccount());
-			// if(payer==null || payee==null){
-			// entityManager.getTransaction().rollback();
-			// return false;
-			// }
+			if (payee == null) {
+				return false;
+			}
 			payment.setPayee(payee);
 			payment.setPayer(payer);
 			entityManager.persist(payment);
 			entityManager.getTransaction().commit();
-		} catch(EntityExistsException| IllegalArgumentException	| TransactionRequiredException e) {
+			return true;
+		}
+		catch(EntityExistsException e){
+			return true;
+		}catch ( IllegalArgumentException
+				| TransactionRequiredException e) {
 			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {

@@ -7,5 +7,5 @@ import dao.entities.PaymentEntity;
 
 public interface PaymentDAO {
 
-	void add(PaymentEntity payment) throws IllegalArgumentException, TransactionRequiredException, EntityExistsException;
+	boolean add(PaymentEntity payment) throws IllegalArgumentException, TransactionRequiredException, EntityExistsException;
 }

@@ -11,6 +11,6 @@ public interface AppService {
 	
 	public Map<String, String> getConfigurations();
 	
-	
 	public void stopService();
+	
 }
