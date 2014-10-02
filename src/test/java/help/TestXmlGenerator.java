@@ -32,7 +32,7 @@ public class TestXmlGenerator {
 	}
 
 	public void generate(String path, int countInPer, int countOfFiles) {
-
+		System.out.println(path);
 		for (int i = 0; i < countOfFiles; i++) {
 			File tmpFile = new File(path + File.separator + "file" + i + ".xml");
 			if (tmpFile.exists()) {

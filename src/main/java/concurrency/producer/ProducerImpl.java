@@ -36,9 +36,9 @@ public class ProducerImpl implements Producer {
 
 	private int errors;
 
-	public ProducerImpl(DropSetter drop, Mapper mapper, FileProvider fileProvider,
-			XmlProvider xmlProvider, FileStorageReadOnly fileStorage)
-			throws NullPointerException {
+	public ProducerImpl(DropSetter drop, Mapper mapper,
+			FileProvider fileProvider, XmlProvider xmlProvider,
+			FileStorageReadOnly fileStorage) throws NullPointerException {
 		if (drop == null || mapper == null || fileProvider == null
 				|| xmlProvider == null || fileStorage == null) {
 			String errorComponents = (drop == null ? "Drop, " : "")
@@ -53,7 +53,7 @@ public class ProducerImpl implements Producer {
 		this.drop = drop;
 		this.mapper = mapper;
 		this.xmlProvider = xmlProvider;
-		this.fileStorage = fileStorage; 
+		this.fileStorage = fileStorage;
 		errors = 0;
 	}
 
@@ -63,7 +63,7 @@ public class ProducerImpl implements Producer {
 			try {
 				transfer();
 			} catch (FileNotFoundException e) {
-				logger.error("File not founded", e); 
+				logger.error("File not founded", e);
 				errors++;
 				continue;
 			} catch (XmlException e) {
@@ -77,47 +77,43 @@ public class ProducerImpl implements Producer {
 
 	public void transfer() throws FileNotFoundException, XmlException {
 		// Get temp copy of file from readed directory
-		File fileFromQueque = getNextFileFromStorage(); 
-		if(fileFromQueque == null){
-			return;}
-		logger.debug("[Get][File] '{}' [file queque]", fileFromQueque.getName());
-		
-		File tmpFile = getPreparedFile(fileFromQueque);
-		if(tmpFile ==null)
+		File fileFromQueque = fileStorage.getNextFile();
+		if (fileFromQueque == null) {
 			return;
-		logger.debug("[Prepare][File] '{}' to work.", tmpFile.getName());
-		logger.debug("[Parse][File]: [Use] providr '{}'",xmlProvider.getClass().getName());
+		}
+		logger.debug("[Get][File] '{}' [file queque]", fileFromQueque.getName());
+
+		File tmpFile = getPreparedFile(fileFromQueque);
+		if (tmpFile == null) {
+			return;
+		}
+		logger.debug(
+				"[Prepare][File]: [Copy] source: '{}', destination: '{}' -> [Delete] source file",
+				fileFromQueque, tmpFile.getName());
+		logger.debug("[Parse][File]: [Use] provider '{}'", xmlProvider
+				.getClass().getName());
 		xmlProvider.parse(tmpFile);
 
 		PaymentXml nextPayment = null;
 		while ((nextPayment = xmlProvider.getNextPayment()) != null) {
-			logger.debug("[Get][Payment] '{}' from '{}'",nextPayment,tmpFile.getName());
+			logger.debug("[Get][Payment] '{}' from '{}'", nextPayment,
+					tmpFile.getName());
 			PaymentDomain paymentDomain = map(nextPayment);
-			logger.debug("[Map][Payment] '{}' -> '{}'",nextPayment,paymentDomain);
-			setPaymentsToDrop(paymentDomain);
+			logger.debug("[Map][Payment] '{}' -> '{}'", nextPayment,
+					paymentDomain);
+			if(drop.setPayment(paymentDomain)){
+				logger.debug("[Set][Payment] '{}' to [drop queque]:SUCCESS",paymentDomain);
+			} else {
+				logger.debug("[drop queque] is closed",paymentDomain);
+				break;
+			}
 		}
 		xmlProvider.close();
 		fileProvider.close(tmpFile);
 	}
 
 	public int getErrorCount() {
-		return errors; 
-	}
-
-	private File getNextFileFromStorage() {
-		File f = null;
-		synchronized (fileStorageLock) {
-			while ((f = fileStorage.getNextFile()) == null) {
-				try {
-					fileStorageLock.wait();
-				} catch (InterruptedException e) {
-					logger.error("Interrupted",e);
-					return null;
-				}
-			}
-			fileStorageLock.notifyAll();
-		}
-		return f;
+		return errors;
 	}
 
 	private File getPreparedFile(File f) {
@@ -125,7 +121,7 @@ public class ProducerImpl implements Producer {
 			try {
 				return fileProvider.prepareFile(f);
 			} catch (IOException e) {
-				logger.error("Prepare file error",e);
+				logger.error("Prepare file error", e);
 				return null;
 			}
 		}
@@ -135,19 +131,5 @@ public class ProducerImpl implements Producer {
 		return mapper.map(payment, PaymentDomainImpl.class);
 	}
 
-	private void setPaymentsToDrop(PaymentDomain payment) {
-		synchronized (sentLock) {
-			while (!drop.setPayment(payment)) {
-				try {
-					sentLock.wait();
-				} catch (InterruptedException e) {
-					logger.error("Interrupted",e);
-					return;
-				}
-			}
-			logger.debug("[Set][Payment] '{}' [drop queque]", payment.toString());
-			sentLock.notifyAll();
-		}
-	}
 
 }

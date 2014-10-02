@@ -33,7 +33,7 @@ public class JAXBplusStAXProviderTest {
 
 	@Test
 	public void testParse() {
-		File testXml = new File("src\\test\\resources\\xmls\\correct.xml");
+		File testXml = new File("C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\xmls\\correct.xml");
 		try {
 			provider.parse(testXml);
 		} catch (FileNotFoundException | XmlException e) {
@@ -44,7 +44,7 @@ public class JAXBplusStAXProviderTest {
 
 	@Test
 	public void testParseCheckData() {
-		File testXml = new File("src\\test\\resources\\xmls\\correct.xml");
+		File testXml = new File("C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\xmls\\correct.xml");
 		try {
 			provider.parse(testXml);
 		} catch (FileNotFoundException | XmlException e) {
@@ -59,7 +59,7 @@ public class JAXBplusStAXProviderTest {
 	@Test
 	public void testParseNotFileFound() {
 		File testXml = new File(
-				"src\\test\\resources\\xmls\\xmlExampleNeverWas.xml");
+				"C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\xmls\\xmlExampleNeverWas.xml");
 
 		try {
 			provider.parse(testXml);
@@ -78,7 +78,7 @@ public class JAXBplusStAXProviderTest {
 
 	@Test
 	public void testParseAndGetNextPayment() {
-		File testXml = new File("src\\test\\resources\\xmls\\correct.xml");
+		File testXml = new File("C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\correct.xml");
 		try {
 			provider.parse(testXml);
 		} catch (FileNotFoundException | XmlException e) {
@@ -96,7 +96,7 @@ public class JAXBplusStAXProviderTest {
 	@Category(SpeedTest.class)
 	@Test
 	public void testReadSpeedOneBig(){
-		File testXml = new File("src\\test\\resources\\xmlSpeedReadTest\\correct.xml");
+		File testXml = new File("C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\xmlSpeedReadTest\\correct.xml");
 		try {
 			provider.parse(testXml);
 		} catch (FileNotFoundException | XmlException e) {

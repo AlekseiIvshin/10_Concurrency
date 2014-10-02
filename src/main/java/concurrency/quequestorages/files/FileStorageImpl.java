@@ -7,6 +7,8 @@ import java.util.concurrent.BlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import domain.PaymentDomain;
+
 public class FileStorageImpl implements FileStorage {
 
 	final static Logger logger = LoggerFactory.getLogger(FileStorageImpl.class);
@@ -16,13 +18,31 @@ public class FileStorageImpl implements FileStorage {
 		queue = new ArrayBlockingQueue<File>(queueSize);
 	}
 
-	@Override
 	public synchronized File getNextFile() {
-		return queue.poll();
+		File f = null;
+		while ((f = queue.poll()) == null) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return null;
+			}
+		}
+		notifyAll();
+		return f;
 	}
 
-	@Override
 	public synchronized boolean setFile(File f) {
-		return queue.offer(f);
+		if (f == null) {
+			return true;
+		}
+		while (!queue.offer(f)) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return false;
+			}
+		}
+		notifyAll();
+		return true;
 	}
 }

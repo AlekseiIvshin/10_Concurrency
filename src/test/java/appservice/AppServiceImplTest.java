@@ -23,8 +23,8 @@ public class AppServiceImplTest {
 		try {
 			appservice = new AppServiceImpl(new DropImpl(2), new MapperImpl(),
 					new FileStorageImpl(2), new FileProviderImpl(new File(
-							"src\\test\\resources\\temp")), 2, 2, new File(
-							"src\\test\\resources"));
+							"C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\temp")), 2, 2, new File(
+							"C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST"));
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
@@ -33,7 +33,7 @@ public class AppServiceImplTest {
 	@Test
 	public void testAddWatchingDirectory() {
 		try {
-			appservice.addWatchingDirectory("src\\test\\resources\\xxx");
+			appservice.addWatchingDirectory("C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\xxx");
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
@@ -42,7 +42,7 @@ public class AppServiceImplTest {
 	@Test
 	public void testStartService() {
 		try {
-			appservice.addWatchingDirectory("src\\test\\resources\\xxx");
+			appservice.addWatchingDirectory("C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\xxx");
 			appservice.startService();
 		} catch (ServiceException | IOException e) {
 			fail(e.getMessage());

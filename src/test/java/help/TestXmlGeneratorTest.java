@@ -14,9 +14,13 @@ public class TestXmlGeneratorTest {
 		try {
 			generator = new TestXmlGenerator();
 		} catch (JAXBException e) {
+			e.printStackTrace();
 			return;
 		}
-		generator.generate("src\\test\\resources\\xxx", 100, 500);
+		generator
+				.generate(
+						"C:\\Users\\Aleksei_Ivshin@epam.com\\Documents\\TEST\\xxx",
+						100, 100);
 	}
 
 }

@@ -54,7 +54,7 @@ public class JAXBplusStAXProvider implements XmlProvider {
 
 	@Override
 	public PaymentXml getNextPayment() {
-		if (xmlReader == null) {
+		if (xmlReader == null ) {
 			return null;
 		}
 		int eventType = xmlReader.getEventType();

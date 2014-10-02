@@ -51,7 +51,7 @@ public class ConsumerImpl implements Consumer {
 	}
 
 	public void transfer() {
-		PaymentDomain domainPayment = getPaymentFromDrop();
+		PaymentDomain domainPayment = drop.getPayment();
 		if (domainPayment == null) {
 			return;
 		}
@@ -62,23 +62,6 @@ public class ConsumerImpl implements Consumer {
 		logger.debug("[Map][Payment] '{}' -> '{}'", domainPayment,
 				paymentEntity);
 		setPaymentToDataBase(paymentEntity);
-
-	}
-
-	private PaymentDomain getPaymentFromDrop() {
-		PaymentDomain domainPayment = null;
-		synchronized (getLock) {
-			while ((domainPayment = drop.getPayment()) == null) {
-				try {
-					getLock.wait(waitFileTimeout);
-				} catch (InterruptedException e) {
-					return null;
-				}
-			}
-			getLock.notifyAll();
-		}
-
-		return domainPayment;
 	}
 
 	private PaymentEntity map(PaymentDomain payment) {
