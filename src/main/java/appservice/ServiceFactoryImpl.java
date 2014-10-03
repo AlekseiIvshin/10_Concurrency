@@ -3,20 +3,22 @@ package appservice;
 import java.io.File;
 import java.io.IOException;
 
+import mapper.Mapper;
+import mapper.MapperImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xml.provider.StreamProviderFactory;
 import xml.provider.XmlProviderFactory;
-import mapper.Mapper;
-import mapper.MapperImpl;
+
 import common.ConfigReader;
 import common.exception.FactoryException;
 import common.fileprovider.FileProviderFactory;
 import common.fileprovider.FileProviderFactoryImpl;
+
 import concurrency.consumer.ConsumerFactory;
 import concurrency.consumer.ConsumerFactoryImpl;
-import concurrency.consumer.ConsumerImpl;
 import concurrency.filewatcher.FileWatcher;
 import concurrency.filewatcher.FileWatcherImpl;
 import concurrency.producer.ProducerFactory;
@@ -35,8 +37,9 @@ import dao.PaymentDAOImpl;
  *
  */
 public class ServiceFactoryImpl implements ServiceFactory {
-	
-	final static Logger logger = LoggerFactory.getLogger(ServiceFactoryImpl.class);
+
+	final static Logger logger = LoggerFactory
+			.getLogger(ServiceFactoryImpl.class);
 
 	private final ConfigReader configReader;
 
@@ -71,15 +74,27 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		FileProviderFactory fileProvider = getFileProviderFactory();
 		XmlProviderFactory xmpProviderFactory = getXmlProviderFactory();
 		PaymentDAO dao = new PaymentDAOImpl();
-		FileWatcher fileWatcher = getFileWatcher(fileStorage, defaultSourceDirectory);
+		FileWatcher fileWatcher = getFileWatcher(fileStorage,
+				defaultSourceDirectory);
 		ConsumerFactory consumerFactory = getConsumerFactory(drop, mapper, dao);
-		ProducerFactory producerFactory = getProducerFactory(drop, fileStorage, xmpProviderFactory, fileProvider, mapper);
+		ProducerFactory producerFactory = getProducerFactory(drop, fileStorage,
+				xmpProviderFactory, fileProvider, mapper);
 
 		try {
-			return new AppServiceImpl(consumerFactory, producerFactory, fileWatcher,prodCount, consCount);
+			return new AppServiceImpl(consumerFactory, producerFactory,
+					fileWatcher, prodCount, consCount);
 		} catch (IOException e) {
 			throw new FactoryException(e.getMessage());
 		}
+	}
+
+	@Override
+	public String getInitInfo() {
+		return "[Producer count = " + prodCount + "]" + "[Consumer count = "
+				+ consCount + "]" + "[Drop queque size = " + dropQueueSize
+				+ "]" + "[File queque size = " + fileQueueSize + "]"
+				+ "[Default source directory = '" + defaultSourceDirectory
+				+ "']";
 	}
 
 	private int getDropQuequeSize() {
@@ -137,15 +152,6 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		}
 	}
 
-	@Override
-	public String getInitInfo() {
-		return "[Producer count = " + prodCount + "]" + "[Consumer count = "
-				+ consCount + "]" + "[Drop queque size = " + dropQueueSize
-				+ "]" + "[File queque size = " + fileQueueSize + "]"
-				+ "[Default source directory = '" + defaultSourceDirectory
-				+ "']";
-	}
-
 	private FileProviderFactory getFileProviderFactory() {
 		return new FileProviderFactoryImpl(new File(getDestinationPath()));
 	}
@@ -175,7 +181,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		return factory;
 	}
 
-	private FileWatcher getFileWatcher(FileStorage fileStorage,File defaultSourceDirectory) {
+	private FileWatcher getFileWatcher(FileStorage fileStorage,
+			File defaultSourceDirectory) {
 		FileWatcher watcher = null;
 		try {
 			watcher = new FileWatcherImpl(fileStorage);

@@ -11,13 +11,12 @@ import org.slf4j.LoggerFactory;
 import common.exception.FactoryException;
 import common.exception.ServiceException;
 import concurrency.consumer.ConsumerFactory;
-import concurrency.consumer.ConsumerImpl;
 import concurrency.filewatcher.FileWatcher;
 import concurrency.producer.ProducerFactory;
 
 public class AppServiceImpl implements AppService {
 
-	final static Logger logger = LoggerFactory.getLogger(ConsumerImpl.class);
+	final static Logger logger = LoggerFactory.getLogger(AppServiceImpl.class);
 
 	private final ExecutorService executorService;
 	private final FileWatcher fileWatcher;
