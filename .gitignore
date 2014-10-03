@@ -17,3 +17,7 @@ hs_err_pid*
 # log files 
 *.log
 *.log
+
+# big test data
+/src/test/resources/XXL
+/src/test/resources/temp

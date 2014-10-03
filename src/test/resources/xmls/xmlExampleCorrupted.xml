@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<payments>
+	<payment>
+                <executionDate>2014-09-28T09:21:12</executionDate>
+		<dateOfPayment>2014-09-28T09:15:12</dateOfPayment>
+		<cash>100.00</cash>
+		<bank>
+			<name>SberMer</name>
+			<BIC>1233125512</BIC>
+		</bank>
+		<payee>
+			<address>some address2</address>
+			<phone>18987</phone>
+			<fullName>Ivonesyan2</fullName>
+			<document>
+				<type>PASSPORT</type>
+				<number>090909</number>
+				<series>1897</series>
+			</document>
+			<account>1708908989335609</account>
+		</payee>
+		<payer>
+			<address>some address</address>
+			<phone>123123</phone>
+			<fullName>Ivonesyan</fullName>
+			<document>
+				<type>PASSPORT</type>
+				<number>123112</number>
+				<series>1231</series>
+			</document>
+		</payer>
+		
+	</payment>
+	<payment>
+                <executionDate>2014-09-28T09:21:12</executionDate>
+		<dateOfPayment>2014-09-28T09:15:12</dateOfPayment>
+		<cash>100.00</cash>
+		<bank>
+			<name>SberMer</name>
+			<BIC>1233125512</BIC>
+		</bank>
+		<payee>
+			<address>some address2</address>
+			<phone>18987</phone>
+			<fullName>Ivonesyan2</fullName>
+			<document>
+				<type>PASSPORT</type>
+				<number>090909</number>
+				<series>1897</series>
+			</document>
+			<account>1708908989335609</account>
+		</payee>
+		<payer>
+			<address>some address</address>
+			<phone>123123</phone>
+			<fullName>Ivonesyan</fullName>
+			<document>
+				<type>PASSPORT</type>
+				<number>123112</number>
+				<series>1231</series>
+			</document>
+			<account>123123232335609</account>
+		</payer>
+		
+	</payment>
+</payments>

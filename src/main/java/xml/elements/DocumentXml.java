@@ -5,8 +5,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-import common.DocumentType;
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "document")
 public class DocumentXml{
