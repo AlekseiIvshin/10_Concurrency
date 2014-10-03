@@ -105,12 +105,7 @@ public class FileWatcher implements Runnable {
 
 				WatchEvent<Path> ev = (WatchEvent<Path>) event;
 				File fileName = ev.context().toFile();
-				if(fileStorage.setFile(fileName)){
-					logger.debug("[Set][File] '{}' to [file queque]: SUCCESS",fileName.getName());
-				} else {
-					logger.error("[Set][File] '"+fileName.getName()+"' to [file queque]: ERROR");
-					return;
-				}
+				setFileToStorage(fileName);
 			}
 			key.reset();
 		}
@@ -127,19 +122,20 @@ public class FileWatcher implements Runnable {
 	private void setExistingFiles(File watchedDirecotry) {
 		File[] files = watchedDirecotry.listFiles(filter);
 		for (File f : files) {
-			synchronized (storageLock) {
-				while (!fileStorage.setFile(f)) {
-					try {
-						storageLock.wait();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						logger.error("Thread interrupted", e);
-						return;
-					}
-				}
-				storageLock.notifyAll();
+			if(!setFileToStorage(f)){
+				return;
 			}
 		}
 	}
 
+	
+	private boolean setFileToStorage(File file){
+		boolean result = fileStorage.setFile(file);
+		if(result){
+			logger.debug("[Set][File] '{}' to [file queque]: SUCCESS",file.getName());
+		} else {
+			logger.error("[Set][File] '"+file.getName()+"' to [file queque]: ERROR");
+		}
+		return result;
+	}
 }

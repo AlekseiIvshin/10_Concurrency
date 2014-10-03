@@ -19,7 +19,7 @@ public class TestXmlGeneratorTest {
 		}
 		generator
 				.generate(
-						"C:\\Users\\dnss\\Documents\\TESTS\\xxx",
+						"src\\test\\resources\\xxl",
 						100, 100);
 	}
 
