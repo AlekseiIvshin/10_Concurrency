@@ -15,8 +15,7 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	private XmlProviderFactory parser;
 	private FileGetter fileStorage;
 	private FileProviderFactory fileProviderFactory;
-	
-	
+
 	@Override
 	public ProducerFactory setDropStorage(DropSetter drop) {
 		this.drop = drop;
@@ -40,21 +39,25 @@ public class ProducerFactoryImpl implements ProducerFactory {
 		this.parser = parser;
 		return this;
 	}
-	
+
 	@Override
-	public ProducerFactory setFileProviderFactory(FileProviderFactory fileProviderFactory) {
+	public ProducerFactory setFileProviderFactory(
+			FileProviderFactory fileProviderFactory) {
 		this.fileProviderFactory = fileProviderFactory;
 		return this;
 	}
 
 	@Override
 	public Producer createProducer() throws FactoryException {
-		try{
-			return new ProducerImpl(drop, mapper, fileProviderFactory.createProvider(), parser.createProvider(), fileStorage);
-		} catch (NullPointerException e){
-			throw new FactoryException("Some components are null or weren't setted to factory. "+e.getMessage());
+		try {
+			return new ProducerImpl(drop, mapper,
+					fileProviderFactory.createProvider(),
+					parser.createProvider(), fileStorage);
+		} catch (NullPointerException e) {
+			throw new FactoryException(
+					"Some components are null or weren't setted to factory. "
+							+ e.getMessage());
 		}
 	}
-
 
 }

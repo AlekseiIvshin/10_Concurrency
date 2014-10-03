@@ -1,4 +1,4 @@
-package concurrency;
+package concurrency.filewatcher;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
@@ -26,9 +26,9 @@ import concurrency.queuestorages.files.FileSetter;
  * @author Aleksei_Ivshin
  *
  */
-public class FileWatcher implements Runnable {
+public class FileWatcherImpl implements FileWatcher {
 
-	final static Logger logger = LoggerFactory.getLogger(FileWatcher.class);
+	final static Logger logger = LoggerFactory.getLogger(FileWatcherImpl.class);
 
 	private final WatchService watcher;
 	/**
@@ -59,7 +59,7 @@ public class FileWatcher implements Runnable {
 	 *            file queue
 	 * @throws IOException
 	 */
-	public FileWatcher(FileSetter storage) throws IOException {
+	public FileWatcherImpl(FileSetter storage) throws IOException {
 		this.fileStorage = storage;
 		watcher = FileSystems.getDefault().newWatchService();
 		watchigDirectories = new HashSet<File>();

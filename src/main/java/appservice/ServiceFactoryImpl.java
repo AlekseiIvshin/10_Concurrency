@@ -3,16 +3,26 @@ package appservice;
 import java.io.File;
 import java.io.IOException;
 
-import xml.provider.StreamProviderFactory;
-import xml.provider.XmlProviderFactory;
 import mapper.Mapper;
 import mapper.MapperImpl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import xml.provider.StreamProviderFactory;
+import xml.provider.XmlProviderFactory;
+
 import common.ConfigReader;
 import common.exception.FactoryException;
 import common.fileprovider.FileProviderFactory;
 import common.fileprovider.FileProviderFactoryImpl;
+
 import concurrency.consumer.ConsumerFactory;
 import concurrency.consumer.ConsumerFactoryImpl;
+import concurrency.filewatcher.FileWatcher;
+import concurrency.filewatcher.FileWatcherImpl;
+import concurrency.producer.ProducerFactory;
+import concurrency.producer.ProducerFactoryImpl;
 import concurrency.queuestorages.drop.Drop;
 import concurrency.queuestorages.drop.DropImpl;
 import concurrency.queuestorages.files.FileStorage;
@@ -28,7 +38,10 @@ import dao.PaymentDAOImpl;
  */
 public class ServiceFactoryImpl implements ServiceFactory {
 
-	private final ConfigReader configReader = new ConfigReader();
+	final static Logger logger = LoggerFactory
+			.getLogger(ServiceFactoryImpl.class);
+
+	private final ConfigReader configReader;
 
 	private final String defaultTempPath = "tmp";
 	private final int defaultProducerCount = 2;
@@ -40,14 +53,15 @@ public class ServiceFactoryImpl implements ServiceFactory {
 	private final int consCount;
 	private final int dropQueueSize;
 	private final int fileQueueSize;
-	private final File defaultSourceDirctory;
+	private final File defaultSourceDirectory;
 
 	public ServiceFactoryImpl() {
+		configReader = new ConfigReader();
 		prodCount = getProducerCount();
 		consCount = getConsumerCount();
 		dropQueueSize = getDropQuequeSize();
 		fileQueueSize = getFileQuequeSize();
-		defaultSourceDirctory = getDefaultSourceDirectory();
+		defaultSourceDirectory = getDefaultSourceDirectory();
 	}
 
 	@Override
@@ -59,20 +73,34 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
 		FileProviderFactory fileProvider = getFileProviderFactory();
 		XmlProviderFactory xmpProviderFactory = getXmlProviderFactory();
+		PaymentDAO dao = new PaymentDAOImpl();
+		FileWatcher fileWatcher = getFileWatcher(fileStorage,
+				defaultSourceDirectory);
+		ConsumerFactory consumerFactory = getConsumerFactory(drop, mapper, dao);
+		ProducerFactory producerFactory = getProducerFactory(drop, fileStorage,
+				xmpProviderFactory, fileProvider, mapper);
 
 		try {
-			return new AppServiceImpl(drop, mapper, fileStorage, fileProvider,
-					xmpProviderFactory, prodCount, consCount,
-					defaultSourceDirctory);
+			return new AppServiceImpl(consumerFactory, producerFactory,
+					fileWatcher, prodCount, consCount);
 		} catch (IOException e) {
 			throw new FactoryException(e.getMessage());
 		}
 	}
 
+	@Override
+	public String getInitInfo() {
+		return "[Producer count = " + prodCount + "]" + "[Consumer count = "
+				+ consCount + "]" + "[Drop queque size = " + dropQueueSize
+				+ "]" + "[File queque size = " + fileQueueSize + "]"
+				+ "[Default source directory = '" + defaultSourceDirectory
+				+ "']";
+	}
+
 	private int getDropQuequeSize() {
 		try {
 			return configReader.getIntValue("dropQuequeSize");
-		} catch (IOException e1) {
+		} catch (Exception e1) {
 			return defaultDropQuequeSize;
 		}
 	}
@@ -80,7 +108,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
 	private int getFileQuequeSize() {
 		try {
 			return configReader.getIntValue("fileQueueSize");
-		} catch (IOException e1) {
+		} catch (Exception e1) {
 			return defaultFileQuequeSize;
 		}
 	}
@@ -124,20 +152,51 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		}
 	}
 
-	@Override
-	public String getInitInfo() {
-		return "[Producer count = " + prodCount + "]" + "[Consumer count = "
-				+ consCount + "]" + "[Drop queque size = " + dropQueueSize
-				+ "]" + "[File queque size = " + fileQueueSize + "]"
-				+ "[Default source directory = '" + defaultSourceDirctory
-				+ "']";
-	}
-
 	private FileProviderFactory getFileProviderFactory() {
 		return new FileProviderFactoryImpl(new File(getDestinationPath()));
 	}
 
 	private XmlProviderFactory getXmlProviderFactory() {
 		return new StreamProviderFactory();
+	}
+
+	private ConsumerFactory getConsumerFactory(Drop drop, Mapper mapper,
+			PaymentDAO dao) {
+		ConsumerFactory consumerFactory = new ConsumerFactoryImpl();
+		consumerFactory.addDropStorage(drop);
+		consumerFactory.addMapper(mapper);
+		consumerFactory.addPaymentDAO(dao);
+		return consumerFactory;
+	}
+
+	private ProducerFactory getProducerFactory(Drop drop,
+			FileStorage fileStorage, XmlProviderFactory xmlProviderFactory,
+			FileProviderFactory fileProviderFactory, Mapper mapper) {
+		ProducerFactory factory = new ProducerFactoryImpl();
+		factory.setDropStorage(drop);
+		factory.setFileProviderFactory(fileProviderFactory);
+		factory.setFileQueueStorage(fileStorage);
+		factory.setMapper(mapper);
+		factory.setXmlProviderFactory(xmlProviderFactory);
+		return factory;
+	}
+
+	private FileWatcher getFileWatcher(FileStorage fileStorage,
+			File defaultSourceDirectory) {
+		FileWatcher watcher = null;
+		try {
+			watcher = new FileWatcherImpl(fileStorage);
+		} catch (IOException e) {
+			logger.error("Can't create file watcher", e);
+			return null;
+		}
+		if (defaultSourceDirectory != null) {
+			try {
+				watcher.addDirectory(defaultSourceDirectory);
+			} catch (IOException e) {
+				logger.info("Add default source directory", e);
+			}
+		}
+		return watcher;
 	}
 }

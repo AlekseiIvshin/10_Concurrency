@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import xml.provider.StreamProviderFactory;
+import common.exception.FactoryException;
 import common.exception.ServiceException;
 import common.fileprovider.FileProviderFactoryImpl;
 import concurrency.queuestorages.drop.DropImpl;
@@ -23,12 +24,10 @@ public class AppServiceImplTest {
 	@Before
 	public void setUp() {
 		try {
-			appservice = new AppServiceImpl(new DropImpl(10), new MapperImpl(),
-					new FileStorageImpl(10), new FileProviderFactoryImpl(
-							new File("src\\test\\resources\\temp")),new StreamProviderFactory(), 2, 2,
-					new File("src\\test\\resources"));
-		} catch (IOException e) {
-			fail(e.getMessage());
+			appservice = (AppServiceImpl) new ServiceFactoryImpl().createService();
+		} catch (FactoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
