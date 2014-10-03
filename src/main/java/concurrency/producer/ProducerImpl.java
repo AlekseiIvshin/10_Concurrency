@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import xml.elements.PaymentXml;
 import xml.provider.XmlProvider;
-import common.FileProvider;
-import common.XmlException;
+import common.exception.XmlException;
+import common.fileprovider.FileProvider;
 import concurrency.queuestorages.drop.DropSetter;
 import concurrency.queuestorages.files.FileGetter;
 import domain.PaymentDomain;

@@ -1,7 +1,5 @@
 package help;
 
-import static org.junit.Assert.*;
-
 import javax.xml.bind.JAXBException;
 
 import org.junit.Test;

@@ -16,10 +16,9 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
 import xml.elements.PaymentXml;
-
-import common.FactoryException;
 import common.SpeedTest;
-import common.XmlException;
+import common.exception.FactoryException;
+import common.exception.XmlException;
 
 public class JAXBplusStAXProviderTest {
 	XmlProvider provider;

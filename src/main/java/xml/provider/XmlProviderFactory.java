@@ -1,6 +1,6 @@
 package xml.provider;
 
-import common.FactoryException;
+import common.exception.FactoryException;
 
 public interface XmlProviderFactory {
 

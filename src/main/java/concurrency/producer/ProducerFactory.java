@@ -3,8 +3,8 @@ package concurrency.producer;
 import mapper.Mapper;
 import xml.provider.XmlProviderFactory;
 
-import common.FactoryException;
-import common.FileProvider;
+import common.exception.FactoryException;
+import common.fileprovider.FileProviderFactory;
 
 import concurrency.queuestorages.drop.DropSetter;
 import concurrency.queuestorages.files.FileGetter;
@@ -55,7 +55,7 @@ public interface ProducerFactory {
 	 * @param fileProvider
 	 * @return this factory instance.
 	 */
-	ProducerFactory setFileProvider(FileProvider fileProvider);
+	ProducerFactory setFileProviderFactory(FileProviderFactory fileProviderFactory);
 
 	/**
 	 * Create new producer instance.

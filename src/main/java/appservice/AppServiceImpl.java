@@ -10,11 +10,10 @@ import mapper.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xml.provider.StreamProviderFactory;
-
-import common.FactoryException;
-import common.FileProvider;
-
+import xml.provider.XmlProviderFactory;
+import common.exception.FactoryException;
+import common.exception.ServiceException;
+import common.fileprovider.FileProviderFactory;
 import concurrency.FileWatcher;
 import concurrency.consumer.ConsumerFactory;
 import concurrency.consumer.ConsumerFactoryImpl;
@@ -34,23 +33,25 @@ public class AppServiceImpl implements AppService {
 	private final Mapper mapper;
 	private final Drop drop;
 	private final FileStorage fileStorage;
-	private final FileProvider fileProvider;
-	private FileWatcher fileWatcher;
+	private final FileProviderFactory fileProviderFactory;
+	private final FileWatcher fileWatcher;
+	private final XmlProviderFactory xmpProviderFactory;
 
 	private final int producerCount;
 	private final int consumerCount;
 
 	public AppServiceImpl(Drop drop, Mapper mapper, FileStorage storage,
-			FileProvider fileProvider, int producerCount, int consumerCount,
-			File defaultSourceDirectory) throws IOException {
+			FileProviderFactory fileProviderFactory, XmlProviderFactory xmpProviderFactory, int producerCount,
+			int consumerCount, File defaultSourceDirectory) throws IOException {
 		executorService = Executors.newCachedThreadPool();
 		this.drop = drop;
 		fileStorage = storage;
 		this.mapper = mapper;
-		this.fileProvider = fileProvider;
+		this.fileProviderFactory = fileProviderFactory;
 
 		this.producerCount = producerCount;
 		this.consumerCount = consumerCount;
+		this.xmpProviderFactory = xmpProviderFactory;
 		fileWatcher = initFileWatcher(defaultSourceDirectory);
 	}
 
@@ -101,10 +102,10 @@ public class AppServiceImpl implements AppService {
 	private ProducerFactory initProducerFactory() {
 		ProducerFactory prodFactory = new ProducerFactoryImpl();
 
-		return prodFactory.setDropStorage(drop).setFileProvider(fileProvider)
+		return prodFactory.setDropStorage(drop)
+				.setFileProviderFactory(fileProviderFactory)
 				.setFileQueueStorage(fileStorage).setMapper(mapper)
-				.setXmlProviderFactory(new StreamProviderFactory());
-				//.setXmlProviderFactory(new JAXBProviderFactory());
+				.setXmlProviderFactory(xmpProviderFactory);
 
 	}
 
@@ -132,6 +133,5 @@ public class AppServiceImpl implements AppService {
 		}
 		return watcher;
 	}
-
 
 }

@@ -2,17 +2,30 @@ package appservice;
 
 import java.io.File;
 import java.io.IOException;
+
+import xml.provider.StreamProviderFactory;
+import xml.provider.XmlProviderFactory;
 import mapper.Mapper;
 import mapper.MapperImpl;
 import common.ConfigReader;
-import common.FactoryException;
-import common.FileProvider;
-import common.FileProviderImpl;
+import common.exception.FactoryException;
+import common.fileprovider.FileProviderFactory;
+import common.fileprovider.FileProviderFactoryImpl;
+import concurrency.consumer.ConsumerFactory;
+import concurrency.consumer.ConsumerFactoryImpl;
 import concurrency.queuestorages.drop.Drop;
 import concurrency.queuestorages.drop.DropImpl;
 import concurrency.queuestorages.files.FileStorage;
 import concurrency.queuestorages.files.FileStorageImpl;
+import dao.PaymentDAO;
+import dao.PaymentDAOImpl;
 
+/**
+ * Factory for creating service. Read 'config.properties'.
+ * 
+ * @author Aleksei_Ivshin
+ *
+ */
 public class ServiceFactoryImpl implements ServiceFactory {
 
 	private final ConfigReader configReader = new ConfigReader();
@@ -23,7 +36,6 @@ public class ServiceFactoryImpl implements ServiceFactory {
 	private final int defaultDropQuequeSize = 10;
 	private final int defaultFileQuequeSize = 10;
 
-	private final String destPath;
 	private final int prodCount;
 	private final int consCount;
 	private final int dropQueueSize;
@@ -31,7 +43,6 @@ public class ServiceFactoryImpl implements ServiceFactory {
 	private final File defaultSourceDirctory;
 
 	public ServiceFactoryImpl() {
-		destPath = getDestinationPath();
 		prodCount = getProducerCount();
 		consCount = getConsumerCount();
 		dropQueueSize = getDropQuequeSize();
@@ -45,11 +56,14 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		Mapper mapper = new MapperImpl();
 		Drop drop = new DropImpl(dropQueueSize);
 		FileStorage fileStorage = new FileStorageImpl(fileQueueSize);
-		FileProvider fileProvider = new FileProviderImpl(new File(destPath));
+
+		FileProviderFactory fileProvider = getFileProviderFactory();
+		XmlProviderFactory xmpProviderFactory = getXmlProviderFactory();
 
 		try {
 			return new AppServiceImpl(drop, mapper, fileStorage, fileProvider,
-					prodCount, consCount, defaultSourceDirctory);
+					xmpProviderFactory, prodCount, consCount,
+					defaultSourceDirctory);
 		} catch (IOException e) {
 			throw new FactoryException(e.getMessage());
 		}
@@ -116,7 +130,14 @@ public class ServiceFactoryImpl implements ServiceFactory {
 				+ consCount + "]" + "[Drop queque size = " + dropQueueSize
 				+ "]" + "[File queque size = " + fileQueueSize + "]"
 				+ "[Default source directory = '" + defaultSourceDirctory
-				+ "']" + "[Destination directory = '" + destPath + "']";
+				+ "']";
 	}
 
+	private FileProviderFactory getFileProviderFactory() {
+		return new FileProviderFactoryImpl(new File(getDestinationPath()));
+	}
+
+	private XmlProviderFactory getXmlProviderFactory() {
+		return new StreamProviderFactory();
+	}
 }

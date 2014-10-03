@@ -8,7 +8,7 @@ import xml.elements.PaymentXml;
 import dao.entities.BankEnity;
 import dao.entities.Document;
 import dao.entities.PaymentEntity;
-import dao.entities.PaymentMemberInterface;
+import dao.entities.PaymentMember;
 import domain.BankDomainImpl;
 import domain.DocumentDomainImpl;
 import domain.ParticipantDomainImpl;
@@ -30,7 +30,7 @@ public class MapperImpl implements Mapper {
 		tmpFactory.classMap( PayerXml.class, ParticipantDomainImpl.class) 
 		.byDefault().register();
 		// Participant: domain -> entity
-		tmpFactory.classMap(ParticipantDomainImpl.class,PaymentMemberInterface.class)
+		tmpFactory.classMap(ParticipantDomainImpl.class,PaymentMember.class)
 		.byDefault().register();
 		
 		// Document: XML -> domain

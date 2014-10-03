@@ -2,7 +2,7 @@ package concurrency.producer;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import mapper.Mapper;
 
 import org.junit.Before;
@@ -15,8 +15,9 @@ import org.mockito.Mock;
 
 import xml.provider.XmlProvider;
 import xml.provider.XmlProviderFactory;
-import common.FactoryException;
-import common.FileProvider;
+import common.exception.FactoryException;
+import common.fileprovider.FileProvider;
+import common.fileprovider.FileProviderFactory;
 import concurrency.queuestorages.drop.Drop;
 import concurrency.queuestorages.files.FileStorage;
 
@@ -34,8 +35,12 @@ public class ProducerFactoryImplTest {
 	XmlProvider xmlProvider = mock(XmlProvider.class);
 	@Mock
 	XmlProviderFactory xmlProviderFactory = mock(XmlProviderFactory.class);
+
 	@Mock
 	FileProvider fileProv = mock(FileProvider.class);
+	
+	@Mock
+	FileProviderFactory fileProvFactory = mock(FileProviderFactory.class);
 	
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -67,7 +72,7 @@ public class ProducerFactoryImplTest {
 
 	@Test
 	public void testAddFileProvider() {
-		assertNotNull(factory.setFileProvider(fileProv));
+		assertNotNull(factory.setFileProviderFactory(fileProvFactory));
 	}
 
 	@Test
@@ -85,7 +90,9 @@ public class ProducerFactoryImplTest {
 		assertNotNull(factory.setMapper(mapper));
 		assertNotNull(factory.setFileQueueStorage(fileStorage));
 		assertNotNull(factory.setXmlProviderFactory(xmlProviderFactory));
-		assertNotNull(factory.setFileProvider(fileProv));
+		assertNotNull(factory.setFileProviderFactory(fileProvFactory));
+		when(xmlProviderFactory.createProvider()).thenReturn(xmlProvider);
+		when(fileProvFactory.createProvider()).thenReturn(fileProv);
 		assertNotNull(factory.createProducer());	
 	}
 	@Test
@@ -96,7 +103,7 @@ public class ProducerFactoryImplTest {
 		assertNotNull(factory.setMapper(mapper));
 		assertNotNull(factory.setFileQueueStorage(fileStorage));
 		//assertNotNull(factory.setXmlProvider(xmlProvider));
-		assertNotNull(factory.setFileProvider(fileProv));
+		assertNotNull(factory.setFileProviderFactory(fileProvFactory));
 		assertNull(factory.createProducer());	
 	}
 

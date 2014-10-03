@@ -2,7 +2,7 @@ package xml.provider;
 
 import javax.xml.bind.JAXBException;
 
-import common.FactoryException;
+import common.exception.FactoryException;
 
 public class StreamProviderFactory implements XmlProviderFactory {
 

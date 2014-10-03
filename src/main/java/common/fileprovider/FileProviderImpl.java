@@ -1,4 +1,4 @@
-package common;
+package common.fileprovider;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,6 +1,6 @@
 package appservice;
 
-import common.FactoryException;
+import common.exception.FactoryException;
 
 public interface ServiceFactory {
 	AppService createService() throws FactoryException;

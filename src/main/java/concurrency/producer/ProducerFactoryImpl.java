@@ -3,8 +3,8 @@ package concurrency.producer;
 import mapper.Mapper;
 import xml.provider.XmlProviderFactory;
 
-import common.FactoryException;
-import common.FileProvider;
+import common.exception.FactoryException;
+import common.fileprovider.FileProviderFactory;
 
 import concurrency.queuestorages.drop.DropSetter;
 import concurrency.queuestorages.files.FileGetter;
@@ -14,7 +14,7 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	private Mapper mapper;
 	private XmlProviderFactory parser;
 	private FileGetter fileStorage;
-	private FileProvider fileProvider;
+	private FileProviderFactory fileProviderFactory;
 	
 	
 	@Override
@@ -42,15 +42,15 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	}
 	
 	@Override
-	public ProducerFactory setFileProvider(FileProvider fileProvider) {
-		this.fileProvider = fileProvider;
+	public ProducerFactory setFileProviderFactory(FileProviderFactory fileProviderFactory) {
+		this.fileProviderFactory = fileProviderFactory;
 		return this;
 	}
 
 	@Override
 	public Producer createProducer() throws FactoryException {
 		try{
-			return new ProducerImpl(drop, mapper, fileProvider, parser.createProvider(), fileStorage);
+			return new ProducerImpl(drop, mapper, fileProviderFactory.createProvider(), parser.createProvider(), fileStorage);
 		} catch (NullPointerException e){
 			throw new FactoryException("Some components are null or weren't setted to factory. "+e.getMessage());
 		}

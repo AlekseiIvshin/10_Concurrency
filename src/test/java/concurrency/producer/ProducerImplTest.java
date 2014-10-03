@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mapper.Mapper;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,10 +22,8 @@ import org.mockito.Mock;
 
 import xml.elements.PaymentXml;
 import xml.provider.XmlProvider;
-
-import common.FileProvider;
-import common.XmlException;
-
+import common.exception.XmlException;
+import common.fileprovider.FileProvider;
 import concurrency.queuestorages.drop.Drop;
 import concurrency.queuestorages.drop.DropSetter;
 import concurrency.queuestorages.files.FileStorage;
@@ -45,7 +44,7 @@ public class ProducerImplTest {
 	@Mock
 	FileProvider fileProviderMock = mock(FileProvider.class);
 	@Mock
-	PaymentXml paymentXmlMock = mock(PaymentXml.class); 
+	PaymentXml paymentXmlMock = mock(PaymentXml.class);
 	@Mock
 	PaymentDomainImpl paymentDomainMock = mock(PaymentDomainImpl.class);
 	@Mock
@@ -64,8 +63,8 @@ public class ProducerImplTest {
 	@Test
 	public void testNullConstructorArguments() {
 		exception.expect(NullPointerException.class);
-		ProducerImpl producer = new ProducerImpl(null, mapperMock, 
-				fileProviderMock, xmlProviderMock, fileStorageMock);
+		new ProducerImpl(null, mapperMock, fileProviderMock, xmlProviderMock,
+				fileStorageMock);
 	}
 
 	@Test
@@ -75,8 +74,7 @@ public class ProducerImplTest {
 				xmlFileMock);
 		when(xmlProviderMock.getNextPayment()).thenReturn(null);
 		when(fileStorageMock.getNextFile()).thenReturn(xmlFileMock);
-		when(fileProviderMock.prepareFile(xmlFileMock)).thenReturn(
-				xmlFileMock);
+		when(fileProviderMock.prepareFile(xmlFileMock)).thenReturn(xmlFileMock);
 		producerWithMocks.transfer();
 		verify(xmlProviderMock, atLeastOnce()).getNextPayment();
 		verify(fileStorageMock, atLeastOnce()).getNextFile();
@@ -89,8 +87,7 @@ public class ProducerImplTest {
 		doThrow(XmlException.class).when(xmlProviderMock).parse(xmlFileMock);
 		when(xmlProviderMock.getNextPayment()).thenReturn(null);
 		when(fileStorageMock.getNextFile()).thenReturn(xmlFileMock);
-		when(fileProviderMock.prepareFile(xmlFileMock)).thenReturn(
-				xmlFileMock);
+		when(fileProviderMock.prepareFile(xmlFileMock)).thenReturn(xmlFileMock);
 		producerWithMocks.transfer();
 		verify(xmlProviderMock, atLeastOnce()).getNextPayment();
 		verify(fileStorageMock, atLeastOnce()).getNextFile();

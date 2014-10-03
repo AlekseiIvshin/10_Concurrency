@@ -2,6 +2,8 @@ package appservice;
 
 import java.io.IOException;
 
+import common.exception.ServiceException;
+
 /**
  * Main mediator. 
  * @author Aleksei_Ivshin

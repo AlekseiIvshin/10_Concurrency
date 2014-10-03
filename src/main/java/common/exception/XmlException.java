@@ -1,4 +1,4 @@
-package common;
+package common.exception;
 
 public class XmlException extends Exception{
 

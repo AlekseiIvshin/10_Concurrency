@@ -76,6 +76,7 @@ public class TestXmlGenerator {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private PaymentXml getRandomData() {
 		Random rnd = new Random();
 		PaymentXml payment = new PaymentXml();
