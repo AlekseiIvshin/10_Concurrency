@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import common.FileProviderImpl;
-import concurrency.quequestorages.drop.DropImpl;
-import concurrency.quequestorages.files.FileStorageImpl;
+import concurrency.queuestorages.drop.DropImpl;
+import concurrency.queuestorages.files.FileStorageImpl;
 
 public class AppServiceImplTest {
 

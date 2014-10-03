@@ -1,4 +1,4 @@
-package concurrency.quequestorages.files;
+package concurrency.queuestorages.files;
 
 import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;

@@ -1,4 +1,4 @@
-package concurrency.quequestorages.drop;
+package concurrency.queuestorages.drop;
 
 import domain.PaymentDomain;
 

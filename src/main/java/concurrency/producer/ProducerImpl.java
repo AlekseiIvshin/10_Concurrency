@@ -13,8 +13,8 @@ import xml.elements.PaymentXml;
 import xml.provider.XmlProvider;
 import common.FileProvider;
 import common.XmlException;
-import concurrency.quequestorages.drop.DropSetter;
-import concurrency.quequestorages.files.FileGetter;
+import concurrency.queuestorages.drop.DropSetter;
+import concurrency.queuestorages.files.FileGetter;
 import domain.PaymentDomain;
 import domain.PaymentDomainImpl;
 
@@ -28,19 +28,18 @@ public class ProducerImpl implements Producer {
 	private final FileGetter fileStorage;
 	private final FileProvider fileProvider;
 
+	/**
+	 * Lock threads then file preparing for further work.
+	 */
 	private Object fileLock = new Object();
-	private int errors;
+	
 
 	public ProducerImpl(DropSetter drop, Mapper mapper,
 			FileProvider fileProvider, XmlProvider xmlProvider,
 			FileGetter fileStorage) throws NullPointerException {
-		if (drop == null || mapper == null || fileProvider == null
-				|| xmlProvider == null || fileStorage == null) {
-			String errorComponents = (drop == null ? "Drop, " : "")
-					+ (mapper == null ? "Mapper, " : "")
-					+ (fileProvider == null ? "FileProvider, " : "")
-					+ (fileStorage == null ? "FileStorage, " : "")
-					+ (xmlProvider == null ? "XmlProvider" : "");
+		
+		String errorComponents = checkArgumentsAndReturnErrorText(drop, mapper, fileProvider, xmlProvider, fileStorage);
+		if (errorComponents.length()>0) {
 			throw new NullPointerException("Must be not null: "
 					+ errorComponents);
 		}
@@ -49,7 +48,25 @@ public class ProducerImpl implements Producer {
 		this.mapper = mapper;
 		this.xmlProvider = xmlProvider;
 		this.fileStorage = fileStorage;
-		errors = 0;
+	}
+	
+	/**
+	 * Check argument and create errors list.
+	 * @param drop drop
+	 * @param mapper mapper
+	 * @param fileProvider file provider
+	 * @param xmlProvider xml provider
+	 * @param fileStorage file queue
+	 * @return errors text list
+	 */
+	private String checkArgumentsAndReturnErrorText(DropSetter drop, Mapper mapper,
+			FileProvider fileProvider, XmlProvider xmlProvider,
+			FileGetter fileStorage){
+		return (drop == null ? "Drop, " : "")
+				+ (mapper == null ? "Mapper, " : "")
+				+ (fileProvider == null ? "FileProvider, " : "")
+				+ (fileStorage == null ? "FileStorage, " : "")
+				+ (xmlProvider == null ? "XmlProvider" : "");
 	}
 
 	@Override
@@ -59,33 +76,39 @@ public class ProducerImpl implements Producer {
 				transfer();
 			} catch (FileNotFoundException e) {
 				logger.error("File not founded", e);
-				errors++;
 				continue;
 			} catch (XmlException e) {
 				logger.error("Parse error", e);
-				errors++;
 				continue;
 			}
 		}
 		fileProvider.close();
 	}
 
+	/**
+	 * Do One iteration: transfer payment file queue -> payment queue. 
+	 * @throws FileNotFoundException
+	 * @throws XmlException
+	 */
 	public void transfer() throws FileNotFoundException, XmlException {
-		// Get temp copy of file from readed directory
-		File fileFromQueque = fileStorage.getNextFile();
-		if (fileFromQueque == null) {
+		
+		// Get file from queue
+		File fileFromQueue = fileStorage.getNextFile();
+		if (fileFromQueue == null) {
 			return;
 		}
-		logger.debug("[Get][File] '{}' [file queque]", fileFromQueque.getName());
-
-		File tmpFile = getPreparedFile(fileFromQueque);
+		logger.debug("[Get][File] '{}' [file queue]", fileFromQueue.getName());
+		
+		//Prepare file for further work.
+		File tmpFile = getPreparedFile(fileFromQueue);
 		if (tmpFile == null) {
 			return;
 		}
 		logger.debug(
 				"[Prepare][File]: [Copy] source: '{}', destination: '{}' -> [Delete] source file",
-				fileFromQueque, tmpFile.getName());
-		logger.debug("[Parse][File]: [Use] provider '{}'", xmlProvider
+				fileFromQueue, tmpFile.getName());
+		
+		logger.debug("[Parse][File] '{}'.[Use] provider '{}'", tmpFile.getName(),xmlProvider
 				.getClass().getName());
 		xmlProvider.parse(tmpFile);
 
@@ -97,9 +120,9 @@ public class ProducerImpl implements Producer {
 			logger.debug("[Map][Payment] '{}' -> '{}'", nextPayment,
 					paymentDomain);
 			if(drop.setPayment(paymentDomain)){
-				logger.debug("[Set][Payment] '{}' to [drop queque]:SUCCESS",paymentDomain);
+				logger.debug("[Set][Payment] '{}' to [drop queue]:SUCCESS",paymentDomain);
 			} else {
-				logger.debug("[drop queque] is closed",paymentDomain);
+				logger.debug("[drop queue] is closed",paymentDomain);
 				break;
 			}
 		}
@@ -107,10 +130,11 @@ public class ProducerImpl implements Producer {
 		fileProvider.close(tmpFile);
 	}
 
-	public int getErrorCount() {
-		return errors;
-	}
-
+	/**
+	 * Prepare file.
+	 * @param f source file
+	 * @return result file
+	 */
 	private File getPreparedFile(File f) {
 		synchronized (fileLock) {
 			try {
@@ -122,6 +146,11 @@ public class ProducerImpl implements Producer {
 		}
 	}
 
+	/**
+	 * Map payment from XML to domain object.
+	 * @param payment XML payment
+	 * @return domain payment
+	 */
 	private PaymentDomain map(PaymentXml payment) {
 		return mapper.map(payment, PaymentDomainImpl.class);
 	}

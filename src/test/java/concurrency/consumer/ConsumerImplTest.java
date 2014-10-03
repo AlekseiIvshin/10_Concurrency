@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 
-import concurrency.quequestorages.drop.Drop;
-import concurrency.quequestorages.drop.DropGetter;
+import concurrency.queuestorages.drop.Drop;
+import concurrency.queuestorages.drop.DropGetter;
 import dao.PaymentDAO;
 import dao.entities.PaymentEntity;
 import domain.PaymentDomain;

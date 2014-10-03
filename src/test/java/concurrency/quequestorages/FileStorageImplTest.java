@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import concurrency.quequestorages.files.FileStorageImpl;
+import concurrency.queuestorages.files.FileStorageImpl;
 
 public class FileStorageImplTest {
 

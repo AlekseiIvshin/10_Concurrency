@@ -6,8 +6,8 @@ import xml.provider.XmlProviderFactory;
 import common.FactoryException;
 import common.FileProvider;
 
-import concurrency.quequestorages.drop.DropSetter;
-import concurrency.quequestorages.files.FileGetter;
+import concurrency.queuestorages.drop.DropSetter;
+import concurrency.queuestorages.files.FileGetter;
 
 public class ProducerFactoryImpl implements ProducerFactory {
 	private DropSetter drop;
@@ -30,7 +30,7 @@ public class ProducerFactoryImpl implements ProducerFactory {
 	}
 
 	@Override
-	public ProducerFactory setFileQuequeStorage(FileGetter fileStorage) {
+	public ProducerFactory setFileQueueStorage(FileGetter fileStorage) {
 		this.fileStorage = fileStorage;
 		return this;
 	}

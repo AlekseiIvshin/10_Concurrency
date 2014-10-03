@@ -1,7 +1,7 @@
 package concurrency.consumer;
 
 import mapper.Mapper;
-import concurrency.quequestorages.drop.DropGetter;
+import concurrency.queuestorages.drop.DropGetter;
 import dao.PaymentDAO;
 
 public class ConsumerFactoryImpl implements ConsumerFactory {

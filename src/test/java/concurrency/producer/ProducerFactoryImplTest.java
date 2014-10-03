@@ -17,8 +17,8 @@ import xml.provider.XmlProvider;
 import xml.provider.XmlProviderFactory;
 import common.FactoryException;
 import common.FileProvider;
-import concurrency.quequestorages.drop.Drop;
-import concurrency.quequestorages.files.FileStorage;
+import concurrency.queuestorages.drop.Drop;
+import concurrency.queuestorages.files.FileStorage;
 
 @RunWith(JUnit4.class)
 public class ProducerFactoryImplTest {
@@ -57,7 +57,7 @@ public class ProducerFactoryImplTest {
 
 	@Test
 	public void testAddFileQuequeStorage() {
-		assertNotNull(factory.setFileQuequeStorage(fileStorage));
+		assertNotNull(factory.setFileQueueStorage(fileStorage));
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class ProducerFactoryImplTest {
 	public void testCreateProducer() throws FactoryException {
 		assertNotNull(factory.setDropStorage(drop));
 		assertNotNull(factory.setMapper(mapper));
-		assertNotNull(factory.setFileQuequeStorage(fileStorage));
+		assertNotNull(factory.setFileQueueStorage(fileStorage));
 		assertNotNull(factory.setXmlProviderFactory(xmlProviderFactory));
 		assertNotNull(factory.setFileProvider(fileProv));
 		assertNotNull(factory.createProducer());	
@@ -94,7 +94,7 @@ public class ProducerFactoryImplTest {
 		exception.expectMessage("components are null or weren't setted");
 		assertNotNull(factory.setDropStorage(drop));
 		assertNotNull(factory.setMapper(mapper));
-		assertNotNull(factory.setFileQuequeStorage(fileStorage));
+		assertNotNull(factory.setFileQueueStorage(fileStorage));
 		//assertNotNull(factory.setXmlProvider(xmlProvider));
 		assertNotNull(factory.setFileProvider(fileProv));
 		assertNull(factory.createProducer());	

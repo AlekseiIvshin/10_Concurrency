@@ -5,7 +5,7 @@ import mapper.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import concurrency.quequestorages.drop.DropGetter;
+import concurrency.queuestorages.drop.DropGetter;
 import dao.PaymentDAO;
 import dao.entities.PaymentEntity;
 import domain.PaymentDomain;

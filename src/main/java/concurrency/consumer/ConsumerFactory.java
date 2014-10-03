@@ -1,6 +1,6 @@
 package concurrency.consumer;
 
-import concurrency.quequestorages.drop.DropGetter;
+import concurrency.queuestorages.drop.DropGetter;
 import dao.PaymentDAO;
 import mapper.Mapper;
 

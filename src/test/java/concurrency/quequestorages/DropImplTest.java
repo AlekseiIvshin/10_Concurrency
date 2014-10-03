@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import concurrency.quequestorages.drop.DropImpl;
+import concurrency.queuestorages.drop.DropImpl;
 import domain.PaymentDomain;
 import static org.mockito.Mockito.*; 
 

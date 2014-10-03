@@ -2,7 +2,6 @@ package appservice;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,8 +21,8 @@ import concurrency.consumer.ConsumerFactoryImpl;
 import concurrency.consumer.ConsumerImpl;
 import concurrency.producer.ProducerFactory;
 import concurrency.producer.ProducerFactoryImpl;
-import concurrency.quequestorages.drop.Drop;
-import concurrency.quequestorages.files.FileStorage;
+import concurrency.queuestorages.drop.Drop;
+import concurrency.queuestorages.files.FileStorage;
 import dao.PaymentDAO;
 import dao.PaymentDAOImpl;
 
@@ -31,14 +30,12 @@ public class AppServiceImpl implements AppService {
 
 	final static Logger logger = LoggerFactory.getLogger(ConsumerImpl.class);
 
-	private final Mapper mapper;
 	private final ExecutorService executorService;
+	private final Mapper mapper;
 	private final Drop drop;
 	private final FileStorage fileStorage;
 	private final FileProvider fileProvider;
 	private FileWatcher fileWatcher;
-
-	// private final ConfigReader configReader = new ConfigReader();
 
 	private final int producerCount;
 	private final int consumerCount;
@@ -58,9 +55,7 @@ public class AppServiceImpl implements AppService {
 	}
 
 	public void addWatchingDirectory(String directory) throws IOException {
-
 		fileWatcher.addDirectory(new File(directory));
-
 	}
 
 	public void startService() throws ServiceException {
@@ -107,7 +102,7 @@ public class AppServiceImpl implements AppService {
 		ProducerFactory prodFactory = new ProducerFactoryImpl();
 
 		return prodFactory.setDropStorage(drop).setFileProvider(fileProvider)
-				.setFileQuequeStorage(fileStorage).setMapper(mapper)
+				.setFileQueueStorage(fileStorage).setMapper(mapper)
 				.setXmlProviderFactory(new StreamProviderFactory());
 				//.setXmlProviderFactory(new JAXBProviderFactory());
 
@@ -136,12 +131,6 @@ public class AppServiceImpl implements AppService {
 			}
 		}
 		return watcher;
-	}
-
-	@Override
-	public Map<String, String> getConfigurations() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

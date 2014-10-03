@@ -8,10 +8,10 @@ import common.ConfigReader;
 import common.FactoryException;
 import common.FileProvider;
 import common.FileProviderImpl;
-import concurrency.quequestorages.drop.Drop;
-import concurrency.quequestorages.drop.DropImpl;
-import concurrency.quequestorages.files.FileStorage;
-import concurrency.quequestorages.files.FileStorageImpl;
+import concurrency.queuestorages.drop.Drop;
+import concurrency.queuestorages.drop.DropImpl;
+import concurrency.queuestorages.files.FileStorage;
+import concurrency.queuestorages.files.FileStorageImpl;
 
 public class ServiceFactoryImpl implements ServiceFactory {
 
@@ -112,12 +112,11 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
 	@Override
 	public String getInitInfo() {
-		return "[Producer count = "+prodCount+"]"
-				+ "[Consumer count = "+consCount+"]"
-				+ "[Drop queque size = "+dropQueueSize+"]"
-				+ "[File queque size = "+fileQueueSize+"]"
-				+ "[Default source directory = '"+defaultSourceDirctory+"']"
-				+ "[Destination directory = '"+destPath+"']";
+		return "[Producer count = " + prodCount + "]" + "[Consumer count = "
+				+ consCount + "]" + "[Drop queque size = " + dropQueueSize
+				+ "]" + "[File queque size = " + fileQueueSize + "]"
+				+ "[Default source directory = '" + defaultSourceDirctory
+				+ "']" + "[Destination directory = '" + destPath + "']";
 	}
 
 }

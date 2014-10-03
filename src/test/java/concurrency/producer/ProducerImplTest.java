@@ -1,6 +1,5 @@
 package concurrency.producer;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -14,30 +13,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mapper.Mapper;
-import mapper.MapperImpl;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 
 import xml.elements.PaymentXml;
 import xml.provider.XmlProvider;
 
-import common.FactoryException;
 import common.FileProvider;
-import common.FileProviderImpl;
-import common.SlowTest;
 import common.XmlException;
 
-import concurrency.quequestorages.drop.Drop;
-import concurrency.quequestorages.drop.DropImpl;
-import concurrency.quequestorages.drop.DropSetter;
-import concurrency.quequestorages.files.FileStorage;
-import concurrency.quequestorages.files.FileStorageImpl;
+import concurrency.queuestorages.drop.Drop;
+import concurrency.queuestorages.drop.DropSetter;
+import concurrency.queuestorages.files.FileStorage;
 import domain.PaymentDomainImpl;
 
 public class ProducerImplTest {
