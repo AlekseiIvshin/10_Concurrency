@@ -16,7 +16,13 @@ public class PayerXml{
 	private DocumentXml document;
 	
 	@XmlElement(required = true)
-	private String fullName;
+	private String surname;
+
+	@XmlElement(required = true)
+	private String name;
+
+	@XmlElement(required = true)
+	private String patronymic;
 	
 	@XmlElement(required = true)
 	private String phone;
@@ -42,13 +48,6 @@ public class PayerXml{
 		this.document = document;
 	}
 
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
 
 	public String getPhone() {
 		return phone;
@@ -64,6 +63,30 @@ public class PayerXml{
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPatronymic() {
+		return patronymic;
+	}
+
+	public void setPatronymic(String patronymic) {
+		this.patronymic = patronymic;
 	}
 
 

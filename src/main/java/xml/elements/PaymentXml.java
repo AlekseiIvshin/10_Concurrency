@@ -5,29 +5,31 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name="payment")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "payment")
 public class PaymentXml{
 
-	@XmlElement(required = true, type=PayerXml.class)
+	@XmlElement(required = true)
 	private PayerXml payer;
 
-	@XmlElement(required = true, type=PayeeXml.class)
+	@XmlElement(required = true)
 	private PayeeXml payee;
 
-	@XmlElement(required = true, type=BankXml.class)
+	@XmlElement(required = true)
 	private BankXml bank;
 
 	@XmlElement(required = true)
 	private float cash;
 
 	@XmlElement(required = true)
-	private Date dateOfPayment;
+	private Date dateOfCreate;
 
 	@XmlElement(required = true)
-	private Date executionDate;
+	private Date dateOfExecute;
 
 	public PaymentXml() {
 	}
@@ -64,19 +66,20 @@ public class PaymentXml{
 		this.cash = cash;
 	}
 
-	public Date getDateOfPayment() {
-		return dateOfPayment;
+	public Date getDateOfCreate() {
+		return dateOfCreate;
 	}
 
-	public void setDateOfPayment(Date dateOfPayment) {
-		this.dateOfPayment = dateOfPayment;
+	public void setDateOfCreate(Date dateOfCreate) {
+		this.dateOfCreate = dateOfCreate;
 	}
 
-	public Date getExecutionDate() {
-		return executionDate;
+	public Date getDateOfExecute() {
+		return dateOfExecute;
 	}
 
-	public void setExecutionDate(Date executionDate) {
-		this.executionDate = executionDate;
+	public void setDateOfExecute(Date dateOfExecute) {
+		this.dateOfExecute = dateOfExecute;
 	}
+
 }

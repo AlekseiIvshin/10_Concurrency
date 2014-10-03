@@ -12,3 +12,12 @@
 hs_err_pid*
 /build/
 /bin/
+
+
+# log files 
+*.log
+*.log
+
+# big test data
+/src/test/resources/XXL
+/src/test/resources/temp

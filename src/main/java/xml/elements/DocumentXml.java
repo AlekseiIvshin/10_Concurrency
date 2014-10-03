@@ -5,8 +5,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-import common.DocumentType;
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "document")
 public class DocumentXml{
@@ -18,7 +16,7 @@ public class DocumentXml{
 	private String number;
 	
 	@XmlElement(required = true)
-	private DocumentType type;
+	private String type;
 
 	public DocumentXml() {
 	}
@@ -39,11 +37,11 @@ public class DocumentXml{
 		this.number = number;
 	}
 
-	public DocumentType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(DocumentType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

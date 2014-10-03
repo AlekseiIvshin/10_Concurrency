@@ -10,22 +10,27 @@ import javax.xml.bind.annotation.XmlType;
 public class PayeeXml {
 	@XmlElement(required = true)
 	private String account;
-
+	
 	@XmlElement(required = true)
 	private DocumentXml document;
+	
+	@XmlElement(required = true)
+	private String surname;
 
 	@XmlElement(required = true)
-	private String fullName;
+	private String name;
 
+	@XmlElement(required = true)
+	private String patronymic;
+	
 	@XmlElement(required = true)
 	private String phone;
 
 	@XmlElement(required = true)
 	private String address;
 
-	public PayeeXml() {
-	}
-
+	public PayeeXml(){}
+	
 	public String getAccount() {
 		return account;
 	}
@@ -42,13 +47,6 @@ public class PayeeXml {
 		this.document = document;
 	}
 
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
 
 	public String getPhone() {
 		return phone;
@@ -65,4 +63,29 @@ public class PayeeXml {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPatronymic() {
+		return patronymic;
+	}
+
+	public void setPatronymic(String patronymic) {
+		this.patronymic = patronymic;
+	}
+
 }
